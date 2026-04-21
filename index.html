@@ -265,9 +265,7 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 <div class="tabs">
   <button class="tab active" onclick="showPage('ronda')">▶ Ronda</button>
   <button class="tab" onclick="showPage('historico')">Histórico <span class="tc" id="histCount">0</span></button>
-  <!-- [QR-CODES-TAB COMENTADO] Reativar quando necessário
   <button class="tab" onclick="showPage('qrcodes')">QR Codes</button>
-  -->
 </div>
 
 <div class="content">
@@ -279,11 +277,11 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 
   <!-- STEP 1: ANALISTA + LOCAL -->
   <div id="step1">
-    <!--<div class="card">
+    <div class="card">
       <div class="card-title">👤 Identificação</div>
       <div class="lbl">Nome do analista</div>
       <input class="itext" id="inputAnalista" type="text" placeholder="Digite seu nome..." maxlength="40" oninput="onAnalistaInput()">
-    </div>-->
+    </div>
     <div class="card" style="margin-top:-5px">
       <div class="card-title">📍 Local da Ronda</div>
       <select class="sel" id="selLocal" onchange="onLocalChange()">
@@ -313,7 +311,7 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
       </div>
     </div>
 
-    <!-- [IDENT-SALA COMENTADO] Reativar quando necessário
+    <!-- QR SCANNER + SELEÇÃO -->
     <div class="card" id="cardIdentSala">
       <div class="card-title">📡 Identificar Sala</div>
       <div class="lbl">Escaneie o QR Code da sala</div>
@@ -338,16 +336,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
           <option value="">— Selecione a sala —</option>
         </select>
       </div>
-    </div>
-    -->
-    <!-- Placeholder oculto para manter referências JS funcionando -->
-    <div id="cardIdentSala" class="hidden">
-      <div id="qrPh"></div>
-      <div id="qr-reader"></div>
-      <div class="sala-det" id="salaDetected"><div class="sd-dot"></div>
-        <div><div class="sd-name" id="salaNomeDisplay">—</div><div class="sd-sub"></div></div>
-      </div>
-      <select id="selSala" onchange="onSelSala()"><option value="">—</option></select>
     </div>
 
     <!-- CHECKLIST (aparece ao identificar sala) -->
@@ -457,7 +445,9 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
   </div>
 </div>
 
-<!-- [ABA-QR-CODES COMENTADO] Reativar quando necessário
+<!-- ═══════════════════════════
+     ABA QR CODES
+═══════════════════════════ -->
 <div class="page" id="page-qrcodes">
   <div class="card qr-filter">
     <div class="card-title">🔲 QR Codes das Salas</div>
@@ -478,12 +468,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
   </div>
   <div class="qr-gen-grid" id="qrGrid"></div>
 </div>
--->
-<!-- Placeholder oculto para manter referências JS -->
-<div id="page-qrcodes" class="hidden">
-  <select id="selQrLocal"><option value="BNU">Blumenau</option></select>
-  <div id="qrGrid"></div>
-</div>
 
 </div><!-- /content -->
 </div><!-- /shell -->
@@ -502,7 +486,7 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
   </div>
 </div>
 
-<!-- [MODAL-QR COMENTADO] Reativar quando necessário
+<!-- MODAL QR AMPLIADO -->
 <div class="mo" id="moQr" onclick="closeMo('moQr',event)">
   <div class="modal" style="max-width:320px">
     <div class="modal-hdr">
@@ -515,13 +499,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
       <button class="btn prim" style="margin-bottom:0;width:auto;padding:10px 24px" onclick="printQr()">🖨 Imprimir</button>
     </div>
   </div>
-</div>
--->
-<!-- Placeholder oculto para manter referências JS -->
-<div id="moQr" class="hidden">
-  <div id="mqBox"></div>
-  <div id="mqTitle"></div>
-  <div id="mqLabel"></div>
 </div>
 
 <!-- TOAST -->
