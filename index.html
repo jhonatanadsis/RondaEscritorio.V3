@@ -198,51 +198,10 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 .hi.fail::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red)}
 .hi-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px}
 .hi-local{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;letter-spacing:1px;color:#fff}
-.hi-analista{font-size:10px;color:var(--muted);margin-top:2px}
 .hi-badge{font-size:8px;letter-spacing:2px;padding:3px 8px;border-radius:2px;text-transform:uppercase}
 .hi-badge.ok{background:rgba(0,230,118,.12);color:var(--green)}
 .hi-badge.fail{background:rgba(255,61,90,.12);color:var(--red)}
 .hi-meta{font-size:10px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
-.pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
-.pill{font-size:9px;letter-spacing:1px;padding:2px 8px;border-radius:20px}
-.pill.ok{background:rgba(0,230,118,.12);color:var(--green)}
-.pill.fail{background:rgba(255,61,90,.12);color:var(--red)}
-
-/* QR GENERATOR */
-.qr-filter{margin-bottom:13px}
-.qr-gen-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.qr-gen-item{background:var(--sur2);border:1px solid var(--bor);border-radius:6px;
-  padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:border-color .2s}
-.qr-gen-item:hover{border-color:rgba(0,102,255,.5)}
-.qr-gen-box{background:#fff;border-radius:4px;padding:6px;display:flex;align-items:center;justify-content:center;min-height:76px;min-width:76px}
-.qr-gen-name{font-size:9px;letter-spacing:.5px;color:var(--text);text-align:center;line-height:1.5;font-family:'DM Mono',monospace}
-
-/* MODAL */
-.mo{position:fixed;inset:0;background:rgba(0,5,15,.9);display:none;
-  align-items:center;justify-content:center;z-index:100;padding:20px;backdrop-filter:blur(4px)}
-.mo.open{display:flex}
-.modal{background:var(--sur);border:1px solid var(--bor);border-radius:8px;
-  width:100%;max-width:400px;max-height:88vh;overflow-y:auto}
-.modal-hdr{padding:14px 16px;border-bottom:1px solid var(--bor);position:sticky;top:0;
-  background:var(--sur);z-index:1;display:flex;align-items:center;justify-content:space-between}
-.modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;letter-spacing:2px;color:#fff}
-.modal-close{width:28px;height:28px;border-radius:50%;background:var(--sur2);
-  border:1px solid var(--bor);color:var(--muted);cursor:pointer;font-size:14px;
-  display:flex;align-items:center;justify-content:center}
-.modal-body{padding:16px}
-.mrow{display:flex;justify-content:space-between;align-items:flex-start;
-  padding:9px 0;border-bottom:1px solid rgba(26,48,80,.5);font-size:12px}
-.mrow:last-child{border-bottom:none}
-.mrow-lbl{color:var(--muted);font-size:9px;letter-spacing:2px;text-transform:uppercase;flex-shrink:0;margin-right:12px}
-.mrow-val{color:var(--text);text-align:right}
-
-/* TOAST */
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
-  background:var(--sur2);border:1px solid var(--blue);color:var(--bluel);
-  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
-  padding:10px 20px;border-radius:30px;transition:transform .3s;
-  z-index:200;pointer-events:none;white-space:nowrap}
-.toast.show{transform:translateX(-50%) translateY(0)}
 
 .divider{height:1px;background:var(--bor);margin:4px 0 13px}
 .hidden{display:none!important}
@@ -272,11 +231,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 
   <div id="step1">
     <div class="card">
-      <div class="card-title">👤 Identificação</div>
-      <div class="lbl">Nome do analista</div>
-      <input class="itext" id="inputAnalista" type="text" placeholder="Digite seu nome..." maxlength="40" oninput="onAnalistaInput()">
-    </div>
-    <div class="card" style="margin-top:-5px">
       <div class="card-title">📍 Local da Ronda</div>
       <select class="sel" id="selLocal" onchange="onLocalChange()">
         <option value="">— Selecione o local —</option>
@@ -287,6 +241,8 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
         <option value="REC">Recife</option>
       </select>
     </div>
+    <input type="hidden" id="inputAnalista" value="Analista">
+    
     <button class="btn prim" id="btnIniciar" onclick="iniciarRonda()" disabled>▶ Iniciar Ronda</button>
   </div>
 
@@ -381,8 +337,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
       <div class="salas-list" id="salasList"></div>
     </div>
 
-    <div class="alert" id="alertFalt"></div>
-
     <div class="hidden" id="secRelatorio">
       <div class="card" style="background:rgba(0,230,118,.05);border-color:rgba(0,230,118,.3)">
         <div class="card-title" style="color:var(--green)">🎉 Ronda Completa!</div>
@@ -404,17 +358,23 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
       <button class="btn ghost" onclick="resetRonda()">↩ Nova Ronda</button>
     </div>
 
-  </div></div><div class="page" id="page-historico">
+  </div>
+</div>
+
+<div class="page" id="page-historico">
   <div class="card" style="padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
     <div style="font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase">Rondas completas</div>
     <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:#fff" id="totalRondas">0</div>
   </div>
   <div id="histList">
-    <div class="hist-empty"><div class="hist-empty-ico">📋</div><div class="hist-empty-txt">Nenhuma ronda registrada</div></div>
+    <div class="hist-empty">📋 Nenhuma ronda registrada</div>
   </div>
 </div>
 
-</div></div><div class="mo" id="moHist" onclick="closeMo('moHist',event)">
+</div>
+</div>
+
+<div class="mo" id="moHist" onclick="closeMo('moHist',event)">
   <div class="modal">
     <div class="modal-hdr">
       <div class="modal-title" id="mhTitle">Detalhe</div>
@@ -439,9 +399,8 @@ const SALAS = {
 };
 const LOCAL_NAME={BNU:'Blumenau',PDC:'PDC',BSB:'Brasília',JK:'JK',REC:'Recife'};
 const CK_KEYS=['camera','audio','tv','cabos'];
-const CK_LBL={camera:'Câmera',audio:'Áudio',tv:'TV',cabos:'Cabos'};
 
-let analista='', localAtual='', salaAtual='';
+let localAtual='', salaAtual='';
 let checks={camera:null,audio:null,tv:null,cabos:null};
 let salasDaRonda={}; 
 let historico=[];
@@ -449,8 +408,6 @@ let itemTI=false;
 
 const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,'0');
-
-if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 
 window.addEventListener('load', () => {
   carregarHistorico();
@@ -471,22 +428,13 @@ function showPage(id){
   if(id==='historico'){tabs[1].classList.add('active');renderHistorico()}
 }
 
-function onAnalistaInput(){
-  analista=$('inputAnalista').value.trim();
-  checkBtnIniciar();
-}
-
 function onLocalChange(){
   localAtual=$('selLocal').value;
-  checkBtnIniciar();
-}
-
-function checkBtnIniciar(){
-  $('btnIniciar').disabled=!(analista && localAtual);
+  $('btnIniciar').disabled = !localAtual;
 }
 
 function iniciarRonda(){
-  if(!analista||!localAtual) return;
+  if(!localAtual) return;
   salasDaRonda={};
   salaAtual='';
   resetCheckUI();
@@ -513,10 +461,8 @@ function definirSala(nome){
   $('salaDetected').classList.add('on');
   $('sectionChecklist').classList.remove('hidden');
   resetCheckUI();
-  setTimeout(()=>$('sectionChecklist').scrollIntoView({behavior:'smooth',block:'start'}),100);
 }
 
-// NOVA FUNÇÃO: MARCAR COMO OCUPADA
 function marcarComoOcupada() {
   CK_KEYS.forEach(k => checks[k] = 'busy'); 
   $('obsText').value = "SALA OCUPADA - Não foi possível conferir os itens.";
@@ -534,7 +480,6 @@ function setCheck(item,val){
   const el=$(`ck-${item}`);
   el.classList.remove('ok','fail');
   el.classList.add(val);
-  el.querySelectorAll('.tb').forEach(b=>b.classList.remove('ok-a','fail-a'));
   el.querySelectorAll('.ok-btn')[0].classList.toggle('ok-a',val==='ok');
   el.querySelectorAll('.fail-btn')[0].classList.toggle('fail-a',val==='fail');
   updateCkProgress();
@@ -573,7 +518,6 @@ function concluirSala(){
   const isBusy = CK_KEYS.some(k => checks[k] === 'busy');
   const anyFail = CK_KEYS.some(k => checks[k] === 'fail');
   let statusFinal = isBusy ? 'busy' : (anyFail ? 'fail' : 'ok');
-
   salasDaRonda[salaAtual]={checks:{...checks},obs,status:statusFinal,ts:new Date().toISOString()};
   salaAtual='';
   $('salaDetected').classList.remove('on');
@@ -586,13 +530,6 @@ function concluirSala(){
   if(falt.length===0) mostrarRelatorio();
 }
 
-function cancelarSala(){
-  salaAtual='';
-  $('salaDetected').classList.remove('on');
-  $('sectionChecklist').classList.add('hidden');
-  resetCheckUI();
-}
-
 function updateGlobalProgress(){
   const salas=SALAS[localAtual]||[];
   const total=salas.length;
@@ -600,17 +537,13 @@ function updateGlobalProgress(){
   const pct=Math.round(done/total*100);
   $('globalBar').style.width=pct+'%';
   $('globalLbl').textContent=`${done} / ${total} salas`;
-  $('gTotal').textContent=total;
-  $('gDone').textContent=done;
-  $('gPend').textContent=total-done;
+  $('gTotal').textContent=total; $('gDone').textContent=done; $('gPend').textContent=total-done;
 }
 
 function renderSalasList(){
   const salas=SALAS[localAtual]||[];
   const list=$('salasList'); list.innerHTML='';
-  const pendentes=salas.filter(s=>!salasDaRonda[s]);
-  const concluidas=salas.filter(s=>!!salasDaRonda[s]);
-  [...pendentes,...concluidas].forEach(s=>{
+  [...salas.filter(s=>!salasDaRonda[s]),...salas.filter(s=>!!salasDaRonda[s])].forEach(s=>{
     const feito=!!salasDaRonda[s];
     const status = feito ? salasDaRonda[s].status : '';
     const ico = feito ? (status === 'busy' ? '🪑' : (status === 'fail' ? '⚠️' : '✅')) : '○';
@@ -640,8 +573,7 @@ function mostrarRelatorio(){
 
 function setItemTI(val){
   itemTI=val;
-  $('rdSim').classList.toggle('active',val);
-  $('rdNao').classList.toggle('active',!val);
+  $('rdSim').classList.toggle('active',val); $('rdNao').classList.toggle('active',!val);
   $('rdSim').textContent = val ? '(✓) Sim' : '( ) Sim';
   $('rdNao').textContent = !val ? '(✓) Não' : '( ) Não';
   $('obsItemWrap').classList.toggle('hidden',!val);
@@ -659,31 +591,26 @@ function buildRelatorio(){
     return`${ico} ${localAtual} - ${s}`;
   }).join('\n');
   const simNao=itemTI?'( X ) Sim  (  ) Não':'(  ) Sim  ( X ) Não';
-  let txt=`📍 ${LOCAL_NAME[localAtual]}\n📊 Ronda Diária\n🗓️ ${formatDate(now)}\n⏰ ${formatTime(now)}\n👤 ${analista}\n${'─'.repeat(28)}\n${linhas}\n${'─'.repeat(28)}\nEncontrou algum item de TI?\n${simNao}`;
+  // Nome do analista removido do template conforme pedido
+  let txt=`📍 ${LOCAL_NAME[localAtual]}\n📊 Ronda Diária\n🗓️ ${formatDate(now)}\n⏰ ${formatTime(now)}\n${'─'.repeat(28)}\n${linhas}\n${'─'.repeat(28)}\nEncontrou algum item de TI?\n${simNao}`;
   if(itemTI&&obsIt) txt+=`\nObservação: ${obsIt}`;
   return txt;
 }
 
 function atualizarRelPreview(){ $('relPreview').textContent=buildRelatorio(); }
-$('obsItem') && $('obsItem').addEventListener('input',atualizarRelPreview);
+if($('obsItem')) $('obsItem').addEventListener('input',atualizarRelPreview);
 
 function enviarRelatorio(){
   const texto=buildRelatorio();
-  const reg={id:Date.now(),local:localAtual,analista,data:new Date().toISOString(),salas:{...salasDaRonda},itemTI,relatorio:texto};
-  historico.unshift(reg);
-  salvarHistorico();
-  atualizarContador();
-  enviarWA(texto);
+  const reg={id:Date.now(),local:localAtual,data:new Date().toISOString(),salas:{...salasDaRonda},itemTI,relatorio:texto};
+  historico.unshift(reg); salvarHistorico(); atualizarContador();
+  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`,'_blank');
 }
-
-function enviarWA(txt){ window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`,'_blank'); }
 
 function resetRonda(){
   salasDaRonda={};salaAtual='';localAtual='';itemTI=false;
-  $('step2').classList.add('hidden');
-  $('step1').classList.remove('hidden');
-  $('selLocal').value=''; $('inputAnalista').value='';
-  $('secRelatorio').classList.add('hidden');
+  $('step2').classList.add('hidden'); $('step1').classList.remove('hidden');
+  $('selLocal').value=''; $('secRelatorio').classList.add('hidden');
   $('cardPendentes').classList.remove('hidden');
   $('hdrSub').textContent='Serasa Experian';
 }
@@ -694,7 +621,7 @@ function atualizarContador(){$('histCount').textContent=historico.length;$('tota
 
 function renderHistorico(){
   const list=$('histList');
-  if(!historico.length){ list.innerHTML=`<div class="hist-empty">Nenhuma ronda registrada</div>`; return; }
+  if(!historico.length){ list.innerHTML='<div class="hist-empty">📋 Nenhuma ronda registrada</div>'; return; }
   list.innerHTML=historico.map((r,i)=>{
     const d=new Date(r.data);
     const fail=Object.values(r.salas).filter(s=>s.status==='fail').length;
@@ -708,11 +635,11 @@ function renderHistorico(){
 function openHist(idx){
   const r=historico[idx];
   $('mhTitle').textContent=`${LOCAL_NAME[r.local]}`;
-  $('mhBody').innerHTML=`<div class="mrow"><div class="mrow-lbl">Analista</div><div class="mrow-val">${r.analista}</div></div>`;
+  $('mhBody').innerHTML=`<div class="mrow"><div class="mrow-lbl">Data</div><div class="mrow-val">${formatDT(new Date(r.data))}</div></div>`;
   $('moHist').classList.add('open');
 }
 
-function closeMo(id,e){if(e.target===$(id))$(id).classList.remove('open')}
+function closeMo(id,e){if(e.target==$(id))$(id).classList.remove('open')}
 </script>
 </body>
 </html>
