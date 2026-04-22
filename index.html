@@ -463,7 +463,7 @@ function buildRelatorio(dadosRonda = null){
   const d = dadosRonda ? new Date(dadosRonda.data) : new Date();
 
   const linhas=(SALAS[local]||[]).map(s=>{
-    const r=salas[s]; let ico=r?(r.status==='busy'?'🪑':(r.status==='ok'?'✅':'⚠️')):'❌';
+    const r=salas[s]; let ico=r?(r.status==='busy'?'👥':(r.status==='ok'?'✅':'⚠️')):'❌';
     return`${ico} ${local} - ${s}`;
   }).join('\n');
   
