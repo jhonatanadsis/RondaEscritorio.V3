@@ -100,7 +100,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 .sala-det.on{display:flex}
 .sd-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px rgba(0,230,118,.7);flex-shrink:0}
 .sd-name{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;letter-spacing:1px;color:var(--green)}
-.sd-sub{font-size:8px;color:var(--muted);letter-spacing:2px;font-family:'DM Mono',monospace}
 
 /* CHECKLIST */
 .cklist{display:flex;flex-direction:column;gap:9px}
@@ -111,7 +110,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 .ck-ico{font-size:18px;flex-shrink:0}
 .ck-info{flex:1}
 .ck-name{font-family:'Syne',sans-serif;font-weight:600;font-size:12px;letter-spacing:1px;color:var(--text)}
-.ck-desc{font-size:9px;color:var(--muted);margin-top:2px}
 .ck-tog{display:flex;gap:4px;flex-shrink:0}
 .tb{width:34px;height:28px;border-radius:3px;border:1px solid var(--bor);
   background:transparent;cursor:pointer;font-size:13px;transition:all .15s;
@@ -142,12 +140,9 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 .btn:active:not(:disabled){transform:scale(.98)}
 .btn:disabled{opacity:.28;cursor:not-allowed;transform:none}
 .btn.prim{background:linear-gradient(135deg,var(--blue),var(--bluel));color:#fff}
-.btn.prim:hover:not(:disabled){box-shadow:0 0 22px rgba(0,102,255,.5)}
 .btn.succ{background:linear-gradient(135deg,#00c853,var(--green));color:#001a0a}
-.btn.succ:hover:not(:disabled){box-shadow:0 0 22px rgba(0,230,118,.4)}
 .btn.wa{background:linear-gradient(135deg,#25d366,#0fae5a);color:#051a0a}
 .btn.ghost{background:transparent;border:1px solid var(--bor);color:var(--muted)}
-.btn.ghost:hover:not(:disabled){border-color:var(--bluel);color:var(--text)}
 .btn-row{display:flex;gap:8px}
 .btn-row .btn{flex:1;margin-bottom:0}
 
@@ -173,7 +168,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 .hi.ok::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green)}
 .hi.fail::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red)}
 .hi-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px}
-.hi-local{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;letter-spacing:1px;color:#fff}
 .hi-badge{font-size:8px;letter-spacing:2px;padding:3px 8px;border-radius:2px;text-transform:uppercase}
 .hi-badge.ok{background:rgba(0,230,118,.12);color:var(--green)}
 .hi-badge.fail{background:rgba(255,61,90,.12);color:var(--red)}
@@ -194,7 +188,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 .modal-body{padding:16px}
 .mrow{display:flex;justify-content:space-between;align-items:flex-start;
   padding:9px 0;border-bottom:1px solid rgba(26,48,80,.5);font-size:12px}
-.mrow:last-child{border-bottom:none}
 .mrow-lbl{color:var(--muted);font-size:9px;letter-spacing:2px;text-transform:uppercase;flex-shrink:0;margin-right:12px}
 .mrow-val{color:var(--text);text-align:right}
 
@@ -463,11 +456,26 @@ function buildRelatorio(dadosRonda = null){
   const d = dadosRonda ? new Date(dadosRonda.data) : new Date();
 
   const linhas=(SALAS[local]||[]).map(s=>{
-    const r=salas[s]; let ico=r?(r.status==='busy'?'👥':(r.status==='ok'?'✅':'⚠️')):'❌';
-    return`${ico} ${local} - ${s}`;
+    const r=salas[s]; 
+    let ico = '👥'; // Ícone padrão de grupo conforme discutido
+    let statusTexto = '';
+    
+    if(r) {
+      if (r.status === 'busy') {
+         statusTexto = ': Sala ocupada';
+      } else if (r.status === 'ok') {
+         ico = '✅';
+      } else if (r.status === 'fail') {
+         ico = '⚠️';
+      }
+    } else {
+      ico = '❌';
+    }
+    
+    return`${ico} ${local} - ${s}${statusTexto}`;
   }).join('\n');
   
-  let txt=`📍 ${LOCAL_NAME[local]}\n📊 Ronda Diária\n🗓️ ${formatDate(d)}\n⏰ ${formatTime(d)}\n${'─'.repeat(28)}\n${linhas}\n${'─'.repeat(28)}\nItens TI encontrados?\n${ti?'( X ) Sim  (  ) Não':'(  ) Sim  ( X ) Não'}`;
+  let txt=`📍 ${LOCAL_NAME[local]}\n📊 Ronda Diária\n🗓️ ${formatDate(d)}\n⏰ ${formatTime(d)}\n\n──── Salas de reuniões ────\n${linhas}\n\nItens TI encontrados?\n${ti?'( X ) Sim  (  ) Não':'(  ) Sim  ( X ) Não'}`;
   if(ti && obs) txt+=`\nObs: ${obs}`;
   return txt;
 }
