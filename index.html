@@ -191,6 +191,10 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 .mrow-lbl{color:var(--muted);font-size:9px;letter-spacing:2px;text-transform:uppercase;flex-shrink:0;margin-right:12px}
 .mrow-val{color:var(--text);text-align:right}
 
+/* HIST LISTA SALAS */
+.hist-salas-list{margin-top:15px;display:flex;flex-direction:column;gap:6px}
+.hsl-item{background:var(--sur2);padding:10px 12px;border-radius:4px;border:1px solid var(--bor);display:flex;justify-content:space-between;font-size:11px}
+
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
   background:var(--sur2);border:1px solid var(--blue);color:var(--bluel);
   font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
@@ -209,7 +213,7 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
       <div class="hdr-brand">Ronda de Salas</div>
       <div class="hdr-sub" id="hdrSub">Serasa Experian</div>
     </div>
-    <div class="hdr-chip">v3.0</div>
+    <div class="hdr-chip">v3.1</div>
   </div>
 </div>
 
@@ -267,7 +271,7 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
       </div>
 
       <button class="btn ghost" onclick="marcarComoOcupada()" style="border-color: var(--amber); color: var(--amber); margin-bottom: 15px;">
-        🪑 Sala Ocupada / Em Reunião
+        👥 Sala Ocupada / Em Reunião
       </button>
 
       <div class="cklist">
@@ -344,6 +348,7 @@ const CK_KEYS=['camera','audio','tv','cabos'];
 
 let localAtual='', salaAtual='', itemTI=false, salasDaRonda={}, historico=[];
 let checks={camera:null,audio:null,tv:null,cabos:null};
+let editingId = null;
 
 const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,'0');
@@ -367,19 +372,59 @@ function showPage(id){
 function onLocalChange(){ localAtual=$('selLocal').value; $('btnIniciar').disabled = !localAtual; }
 
 function iniciarRonda(){
-  salasDaRonda={}; salaAtual=''; resetCheckUI();
-  $('step1').classList.add('hidden'); $('step2').classList.remove('hidden');
-  $('sectionChecklist').classList.add('hidden'); $('secRelatorio').classList.add('hidden');
+  if(!editingId) {
+    salasDaRonda={}; 
+    salaAtual=''; 
+    resetCheckUI();
+    itemTI = false;
+    $('obsItem').value = '';
+    setItemTI(false);
+  }
+  $('step1').classList.add('hidden'); 
+  $('step2').classList.remove('hidden');
   $('hdrSub').textContent=`Serasa · ${LOCAL_NAME[localAtual]}`;
-  updateGlobalProgress(); renderSalasList(); populateSelSala();
+  
+  if(editingId) {
+    mostrarRelatorio(); // Se estiver editando, vai direto pro final pra ver o que quer mudar
+  } else {
+    $('sectionChecklist').classList.add('hidden'); 
+    $('secRelatorio').classList.add('hidden');
+    updateGlobalProgress(); 
+    renderSalasList(); 
+    populateSelSala();
+  }
 }
 
 function onSelSala(){ const v=$('selSala').value; if(v) definirSala(v); $('selSala').value=''; }
 
 function definirSala(nome){
-  if(salasDaRonda[nome]){ showToast(`"${nome}" já conferida!`); return; }
-  salaAtual=nome; $('salaNomeDisplay').textContent=`${localAtual} - ${nome}`;
-  $('salaDetected').classList.add('on'); $('sectionChecklist').classList.remove('hidden'); resetCheckUI();
+  salaAtual=nome; 
+  $('salaNomeDisplay').textContent=`${localAtual} - ${nome}`;
+  $('salaDetected').classList.add('on'); 
+  $('sectionChecklist').classList.remove('hidden'); 
+  
+  // Se já tinha dados dessa sala (em edição), carrega
+  if(salasDaRonda[nome]) {
+    checks = {...salasDaRonda[nome].checks};
+    $('obsText').value = salasDaRonda[nome].obs || '';
+    updateCheckUIFromData();
+  } else {
+    resetCheckUI();
+  }
+  updateCkProgress();
+}
+
+function updateCheckUIFromData() {
+  CK_KEYS.forEach(k => {
+    const val = checks[k];
+    const el=$(`ck-${k}`);
+    el.classList.remove('ok','fail');
+    el.querySelectorAll('.tb').forEach(b=>b.classList.remove('ok-a','fail-a'));
+    if(val && val !== 'busy') {
+      el.classList.add(val);
+      el.querySelector(`.${val}-btn`).classList.add(`${val}-a`);
+    }
+  });
 }
 
 function marcarComoOcupada() {
@@ -428,10 +473,12 @@ function updateGlobalProgress(){
 function renderSalasList(){
   const s=SALAS[localAtual]||[], list=$('salasList'); list.innerHTML='';
   [...s.filter(x=>!salasDaRonda[x]),...s.filter(x=>!!salasDaRonda[x])].forEach(x=>{
-    const f=!!salasDaRonda[x], st=f?salasDaRonda[x].status:'', ico=f?(st==='busy'?'🪑':(st==='fail'?'⚠️':'✅')):'○';
+    const f=!!salasDaRonda[x], st=f?salasDaRonda[x].status:'', ico=f?(st==='busy'?'👥':(st==='fail'?'⚠️':'✅')):'○';
     const d=document.createElement('div'); d.className='sala-pill'+(f?' done':'');
     d.innerHTML=`<span class="sp-name">${localAtual} - ${x}</span><span class="sp-ico">${ico}</span>`;
-    if(!f) d.onclick=()=>definirSala(x); list.appendChild(d);
+    // Em modo edição permitimos clicar mesmo nas concluídas para re-editar
+    d.onclick=()=>definirSala(x);
+    list.appendChild(d);
   });
 }
 
@@ -440,7 +487,11 @@ function populateSelSala(){
   s.filter(x=>!salasDaRonda[x]).forEach(x=>{ const o=document.createElement('option'); o.value=x; o.textContent=`${localAtual} - ${x}`; sel.appendChild(o); });
 }
 
-function mostrarRelatorio(){ $('cardPendentes').classList.add('hidden'); $('secRelatorio').classList.remove('hidden'); atualizarRelPreview(); }
+function mostrarRelatorio(){ 
+  $('cardPendentes').classList.add('hidden'); 
+  $('secRelatorio').classList.remove('hidden'); 
+  atualizarRelPreview(); 
+}
 
 function setItemTI(v){
   itemTI=v; $('rdSim').classList.toggle('active',v); $('rdNao').classList.toggle('active',!v);
@@ -457,7 +508,7 @@ function buildRelatorio(dadosRonda = null){
 
   const linhas=(SALAS[local]||[]).map(s=>{
     const r=salas[s]; 
-    let ico = '👥'; // Ícone padrão de grupo conforme discutido
+    let ico = '👥'; 
     let statusTexto = '';
     
     if(r) {
@@ -483,9 +534,29 @@ function buildRelatorio(dadosRonda = null){
 function atualizarRelPreview(){ $('relPreview').textContent=buildRelatorio(); }
 
 function enviarRelatorio(){
-  const t=buildRelatorio(), reg={id:Date.now(),local:localAtual,data:new Date().toISOString(),salas:{...salasDaRonda},itemTI,obsItem:$('obsItem').value.trim(),relatorio:t};
-  historico.unshift(reg); salvarHistorico(); atualizarContador();
+  const t=buildRelatorio();
+  const reg={
+    id: editingId || Date.now(),
+    local: localAtual,
+    data: editingId ? historico.find(h=>h.id===editingId).data : new Date().toISOString(),
+    salas: {...salasDaRonda},
+    itemTI,
+    obsItem: $('obsItem').value.trim(),
+    relatorio: t
+  };
+
+  if(editingId) {
+    const idx = historico.findIndex(h => h.id === editingId);
+    historico[idx] = reg;
+    showToast("Ronda atualizada!");
+  } else {
+    historico.unshift(reg);
+  }
+
+  salvarHistorico(); 
+  atualizarContador();
   window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`,'_blank');
+  if(editingId) resetRonda();
 }
 
 function reenviarHist(idx){
@@ -494,13 +565,32 @@ function reenviarHist(idx){
   window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`,'_blank');
 }
 
-function resetRonda(){
-  salasDaRonda={}; localAtual=''; itemTI=false; $('step2').classList.add('hidden'); $('step1').classList.remove('hidden');
-  $('selLocal').value=''; $('secRelatorio').classList.add('hidden'); $('cardPendentes').classList.remove('hidden'); $('hdrSub').textContent='Serasa Experian';
+function editarHist(idx){
+  const r = historico[idx];
+  editingId = r.id;
+  localAtual = r.local;
+  salasDaRonda = {...r.salas};
+  itemTI = r.itemTI;
+  $('selLocal').value = r.local;
+  $('obsItem').value = r.obsItem || '';
+  
+  // Fecha modal e vai para página de ronda
+  $('moHist').classList.remove('open');
+  showPage('ronda');
+  iniciarRonda();
+  setItemTI(r.itemTI);
+  showToast("Modo edição ativado");
 }
 
-function salvarHistorico(){ try{localStorage.setItem('ronda_v3',JSON.stringify(historico))}catch(e){} }
-function carregarHistorico(){ try{const r=localStorage.getItem('ronda_v3'); if(r)historico=JSON.parse(r)}catch(e){} }
+function resetRonda(){
+  salasDaRonda={}; localAtual=''; itemTI=false; editingId=null;
+  $('step2').classList.add('hidden'); $('step1').classList.remove('hidden');
+  $('selLocal').value=''; $('secRelatorio').classList.add('hidden'); 
+  $('cardPendentes').classList.remove('hidden'); $('hdrSub').textContent='Serasa Experian';
+}
+
+function salvarHistorico(){ try{localStorage.setItem('ronda_v3_1',JSON.stringify(historico))}catch(e){} }
+function carregarHistorico(){ try{const r=localStorage.getItem('ronda_v3_1'); if(r)historico=JSON.parse(r)}catch(e){} }
 function atualizarContador(){ $('histCount').textContent=historico.length; $('totalRondas').textContent=historico.length; }
 
 function renderHistorico(){
@@ -513,9 +603,29 @@ function renderHistorico(){
 }
 
 function openHist(i){
-  const r=historico[i]; $('mhTitle').textContent=`Ronda ${LOCAL_NAME[r.local]}`;
-  $('mhBody').innerHTML=`<div class="mrow"><div class="mrow-lbl">Data</div><div class="mrow-val">${formatDT(r.data)}</div></div><div class="mrow"><div class="mrow-lbl">Salas</div><div class="mrow-val">${Object.keys(r.salas).length} concluídas</div></div>`;
-  $('mhFooter').innerHTML=`<button class="btn wa" onclick="reenviarHist(${i})">⬈ Reenviar WhatsApp</button>`;
+  const r=historico[i]; 
+  $('mhTitle').textContent=`Ronda ${LOCAL_NAME[r.local]}`;
+  
+  let salasInfo = '';
+  for(let s in r.salas) {
+    const st = r.salas[s].status;
+    const ico = st==='busy'?'👥':(st==='fail'?'⚠️':'✅');
+    salasInfo += `<div class="hsl-item"><span>${ico} ${s}</span><span style="color:var(--muted)">${st.toUpperCase()}</span></div>`;
+  }
+
+  $('mhBody').innerHTML=`
+    <div class="mrow"><div class="mrow-lbl">Data</div><div class="mrow-val">${formatDT(r.data)}</div></div>
+    <div class="mrow"><div class="mrow-lbl">Itens TI</div><div class="mrow-val">${r.itemTI?'Sim':'Não'}</div></div>
+    <div class="lbl" style="margin-top:15px">Status por Sala:</div>
+    <div class="hist-salas-list">${salasInfo}</div>
+  `;
+  
+  $('mhFooter').innerHTML=`
+    <div class="btn-row">
+      <button class="btn ghost" onclick="editarHist(${i})" style="flex:1">✏️ Editar</button>
+      <button class="btn wa" onclick="reenviarHist(${i})" style="flex:2">⬈ Reenviar</button>
+    </div>
+  `;
   $('moHist').classList.add('open');
 }
 
