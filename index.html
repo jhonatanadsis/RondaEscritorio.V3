@@ -43,7 +43,7 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
   text-transform:uppercase;color:var(--muted);border:none;background:none;cursor:pointer;
   border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;text-align:center}
 .tab.active{color:var(--bluel);border-bottom-color:var(--blue)}
-.tc{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;
+.tc{display:inline_flex;align-items:center;justify-content:center;width:15px;height:15px;
   border-radius:50%;background:var(--blue);color:#fff;font-size:8px;margin-left:3px;vertical-align:middle}
 
 /* CONTENT */
@@ -142,6 +142,7 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 .sronda.pend{background:rgba(255,170,0,.08);border:1px solid rgba(255,170,0,.3);color:var(--amber)}
 .sronda.ok{background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.3);color:var(--green)}
 .sronda.fail{background:rgba(255,61,90,.08);border:1px solid rgba(255,61,90,.3);color:var(--red)}
+.sronda.busy{background:rgba(90,112,144,0.15);border:1px solid var(--muted);color:var(--text)}
 .sr-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
 
 /* OBS */
@@ -250,7 +251,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 <body>
 <div class="shell">
 
-<!-- HEADER -->
 <div class="hdr">
   <div class="hdr-row">
     <div>
@@ -261,23 +261,15 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
   </div>
 </div>
 
-<!-- TABS -->
 <div class="tabs">
   <button class="tab active" onclick="showPage('ronda')">▶ Ronda</button>
   <button class="tab" onclick="showPage('historico')">Histórico <span class="tc" id="histCount">0</span></button>
-  <!-- [QR-CODES-TAB COMENTADO] Reativar quando necessário
-  <button class="tab" onclick="showPage('qrcodes')">QR Codes</button>
-  -->
 </div>
 
 <div class="content">
 
-<!-- ═══════════════════════════
-     ABA RONDA
-═══════════════════════════ -->
 <div class="page active" id="page-ronda">
 
-  <!-- STEP 1: ANALISTA + LOCAL -->
   <div id="step1">
     <div class="card">
       <div class="card-title">👤 Identificação</div>
@@ -298,10 +290,8 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
     <button class="btn prim" id="btnIniciar" onclick="iniciarRonda()" disabled>▶ Iniciar Ronda</button>
   </div>
 
-  <!-- STEP 2: RONDA EM ANDAMENTO -->
   <div id="step2" class="hidden">
 
-    <!-- PROGRESSO GLOBAL -->
     <div class="gprog" id="globalProg">
       <div class="lbl">Progresso da ronda</div>
       <div class="pb-wrap"><div class="pb" id="globalBar" style="width:0%"></div></div>
@@ -313,34 +303,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
       </div>
     </div>
 
-    <!-- [IDENT-SALA COMENTADO] Reativar quando necessário
-    <div class="card" id="cardIdentSala">
-      <div class="card-title">📡 Identificar Sala</div>
-      <div class="lbl">Escaneie o QR Code da sala</div>
-      <div class="qr-area" id="qrArea" onclick="iniciarScanner()">
-        <div class="qr-ph" id="qrPh">
-          <div class="qr-ph-ico">⬡</div>
-          <div class="qr-ph-lbl">Toque para escanear</div>
-        </div>
-        <div id="qr-reader"></div>
-      </div>
-      <div class="sala-det" id="salaDetected">
-        <div class="sd-dot"></div>
-        <div>
-          <div class="sd-name" id="salaNomeDisplay">—</div>
-          <div class="sd-sub">Sala identificada via QR</div>
-        </div>
-      </div>
-
-      <div style="margin-top:10px">
-        <div class="lbl">Ou selecione na lista de pendentes</div>
-        <select class="sel" id="selSala" onchange="onSelSala()">
-          <option value="">— Selecione a sala —</option>
-        </select>
-      </div>
-    </div>
-    -->
-    <!-- Placeholder oculto para manter referências JS funcionando -->
     <div id="cardIdentSala" class="hidden">
       <div id="qrPh"></div>
       <div id="qr-reader"></div>
@@ -350,7 +312,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
       <select id="selSala" onchange="onSelSala()"><option value="">—</option></select>
     </div>
 
-    <!-- CHECKLIST (aparece ao identificar sala) -->
     <div id="sectionChecklist" class="hidden">
       <div class="card" style="padding-bottom:9px">
         <div class="card-title">✅ Verificação</div>
@@ -361,6 +322,12 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
       <div class="sronda pend" id="sronda">
         <div class="sr-dot"></div>
         <span id="srTxt">Verificação pendente</span>
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <button class="btn ghost" id="btnSalaOcupada" onclick="marcarComoOcupada()" style="border-color: var(--amber); color: var(--amber);">
+          🪑 Sala Ocupada / Em Reunião
+        </button>
       </div>
 
       <div class="cklist">
@@ -409,16 +376,13 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
       </div>
     </div>
 
-    <!-- SALAS PENDENTES -->
     <div class="card" id="cardPendentes">
       <div class="card-title">⏳ Salas Pendentes</div>
       <div class="salas-list" id="salasList"></div>
     </div>
 
-    <!-- ALERTA -->
     <div class="alert" id="alertFalt"></div>
 
-    <!-- RELATÓRIO FINAL -->
     <div class="hidden" id="secRelatorio">
       <div class="card" style="background:rgba(0,230,118,.05);border-color:rgba(0,230,118,.3)">
         <div class="card-title" style="color:var(--green)">🎉 Ronda Completa!</div>
@@ -440,14 +404,7 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
       <button class="btn ghost" onclick="resetRonda()">↩ Nova Ronda</button>
     </div>
 
-  </div><!-- /step2 -->
-
-</div><!-- /page-ronda -->
-
-<!-- ═══════════════════════════
-     ABA HISTÓRICO
-═══════════════════════════ -->
-<div class="page" id="page-historico">
+  </div></div><div class="page" id="page-historico">
   <div class="card" style="padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
     <div style="font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase">Rondas completas</div>
     <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:#fff" id="totalRondas">0</div>
@@ -457,39 +414,7 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
   </div>
 </div>
 
-<!-- [ABA-QR-CODES COMENTADO] Reativar quando necessário
-<div class="page" id="page-qrcodes">
-  <div class="card qr-filter">
-    <div class="card-title">🔲 QR Codes das Salas</div>
-    <div class="lbl">Filtrar por local</div>
-    <select class="sel" id="selQrLocal" onchange="renderQrGrid()">
-      <option value="BNU">Blumenau</option>
-      <option value="PDC">PDC</option>
-      <option value="BSB">Brasília</option>
-      <option value="JK">JK</option>
-      <option value="REC">Recife</option>
-    </select>
-    <div style="font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:10px;line-height:1.7">
-      ℹ️ O QR Code já carrega o local e a sala automaticamente ao ser escaneado.
-    </div>
-  </div>
-  <div style="font-size:9px;color:var(--muted);letter-spacing:2px;text-align:center;margin-bottom:10px">
-    TOQUE PARA AMPLIAR / IMPRIMIR
-  </div>
-  <div class="qr-gen-grid" id="qrGrid"></div>
-</div>
--->
-<!-- Placeholder oculto para manter referências JS -->
-<div id="page-qrcodes" class="hidden">
-  <select id="selQrLocal"><option value="BNU">Blumenau</option></select>
-  <div id="qrGrid"></div>
-</div>
-
-</div><!-- /content -->
-</div><!-- /shell -->
-
-<!-- MODAL HISTÓRICO -->
-<div class="mo" id="moHist" onclick="closeMo('moHist',event)">
+</div></div><div class="mo" id="moHist" onclick="closeMo('moHist',event)">
   <div class="modal">
     <div class="modal-hdr">
       <div class="modal-title" id="mhTitle">Detalhe</div>
@@ -502,35 +427,9 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
   </div>
 </div>
 
-<!-- [MODAL-QR COMENTADO] Reativar quando necessário
-<div class="mo" id="moQr" onclick="closeMo('moQr',event)">
-  <div class="modal" style="max-width:320px">
-    <div class="modal-hdr">
-      <div class="modal-title" id="mqTitle">QR Code</div>
-      <button class="modal-close" onclick="document.getElementById('moQr').classList.remove('open')">✕</button>
-    </div>
-    <div style="padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px">
-      <div id="mqBox" style="background:#fff;padding:12px;border-radius:6px"></div>
-      <div style="font-size:10px;letter-spacing:2px;color:var(--muted);text-align:center;max-width:260px;line-height:1.6" id="mqLabel"></div>
-      <button class="btn prim" style="margin-bottom:0;width:auto;padding:10px 24px" onclick="printQr()">🖨 Imprimir</button>
-    </div>
-  </div>
-</div>
--->
-<!-- Placeholder oculto para manter referências JS -->
-<div id="moQr" class="hidden">
-  <div id="mqBox"></div>
-  <div id="mqTitle"></div>
-  <div id="mqLabel"></div>
-</div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════
-// DADOS
-// ═══════════════════════════════════════
 const SALAS = {
   BNU:['1ºR.01 - FEIRÃO 01','1ºR.02 - FEIRÃO 02','1ºR.03 - FEIRÃO 03','1ºR.04 - PREMIUM','1ºR.05 - EMPRESTIMO','1ºM.01 - CRÉDITO (MULTIUSO)','1ºM.02 - DÉBITO (MULTIUSO)','1ºF.01 - FOCO 01','1ºF.02 - FOCO 02','1ºF.03 - FOCO 03','1ºF.04 - FOCO 04','1ºAUD - AUDITÓRIO','2ºR.01 - TPV','2ºR.02 - AUTENTICAÇÃO','2ºR.03 - SEGUROS','2ºR.04 - NEGOCIAÇÃO','2ºR.05 - ACORDO','2ºR.06 - NPS','2ºR.07 - SUPER APP','2ºR.08 - MONITORAMENTO','2ºR.09 - PARCEIROS','2ºM.01 - INTEGRAÇÃO (MULTIUSO)','2ºM.02 - NOME LIMPO (MULTIUSO)','1ºO.01 - OFERTAS (Open Meeting)','1ºO.02 - SCORE (Open Meeting)','1ºO.03 - PIX (Open Meeting)'],
   PDC:['G19.01','R19.01','R19.02','R19.03','R19.04','R19.05','R19.06','R19.07','R19.08','R19.09','R19.10','R20.01','R20.02','R20.05','R20.06','R20.07','R21.Tomorrowland','R22.01','R22.03','R22.04','R22.05','R22.06','R22.07','R23.01','R23.02','R23.03','R23.04','R23.05','R23.06'],
@@ -542,64 +441,27 @@ const LOCAL_NAME={BNU:'Blumenau',PDC:'PDC',BSB:'Brasília',JK:'JK',REC:'Recife'}
 const CK_KEYS=['camera','audio','tv','cabos'];
 const CK_LBL={camera:'Câmera',audio:'Áudio',tv:'TV',cabos:'Cabos'};
 
-// ═══════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════
 let analista='', localAtual='', salaAtual='';
 let checks={camera:null,audio:null,tv:null,cabos:null};
-let salasDaRonda={};   // { sala: { checks, obs, status, ts } }
+let salasDaRonda={}; 
 let historico=[];
-let qrScanner=null;
-let qrInsts={};
-let modalHistReg=null;
 let itemTI=false;
-let mqSrc='';
 
 const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,'0');
 
-// ═══════════════════════════════════════
-// PWA
-// ═══════════════════════════════════════
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 
-// Verifica deep link ao abrir (QR Code carregou local+sala via URL hash)
 window.addEventListener('load', () => {
-  const hash = location.hash; // ex: #BNU|1ºR.01 - FEIRÃO 01
-  if (hash && hash.includes('|')) {
-    const parts = decodeURIComponent(hash.slice(1)).split('|');
-    if (parts.length === 2) {
-      const [loc, sala] = parts;
-      if (SALAS[loc] && SALAS[loc].includes(sala)) {
-        // pré-preenche local
-        $('selLocal').value = loc;
-        onLocalChange(true); // silencioso
-        // foca no campo analista
-        $('inputAnalista').focus();
-        // guarda para usar ao iniciar
-        window._qrDeepLink = { loc, sala };
-        showToast(`QR detectado: ${loc} — ${sala}`);
-      }
-    }
-    history.replaceState(null, '', location.pathname);
-  }
   carregarHistorico();
   atualizarContador();
-  setItemTI(false);
-  renderQrGrid();
 });
 
-// ═══════════════════════════════════════
-// UTILS
-// ═══════════════════════════════════════
 function formatDate(d){return`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`}
 function formatTime(d){return`${pad(d.getHours())}h${pad(d.getMinutes())}`}
 function formatDT(d){return`${formatDate(d)} às ${formatTime(d)}`}
-function toast(msg,dur=2800){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur)}
+function showToast(msg,dur=2800){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur)}
 
-// ═══════════════════════════════════════
-// TABS
-// ═══════════════════════════════════════
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -607,18 +469,14 @@ function showPage(id){
   const tabs=document.querySelectorAll('.tab');
   if(id==='ronda') tabs[0].classList.add('active');
   if(id==='historico'){tabs[1].classList.add('active');renderHistorico()}
-  if(id==='qrcodes'){tabs[2].classList.add('active');renderQrGrid()}
 }
 
-// ═══════════════════════════════════════
-// STEP 1 — IDENTIFICAÇÃO
-// ═══════════════════════════════════════
 function onAnalistaInput(){
   analista=$('inputAnalista').value.trim();
   checkBtnIniciar();
 }
 
-function onLocalChange(silent=false){
+function onLocalChange(){
   localAtual=$('selLocal').value;
   checkBtnIniciar();
 }
@@ -636,54 +494,10 @@ function iniciarRonda(){
   $('step2').classList.remove('hidden');
   $('sectionChecklist').classList.add('hidden');
   $('secRelatorio').classList.add('hidden');
-  $('alertFalt').classList.remove('on');
   $('hdrSub').textContent=`Serasa · ${LOCAL_NAME[localAtual]}`;
   updateGlobalProgress();
   renderSalasList();
   populateSelSala();
-
-  // se veio de deep link QR
-  if(window._qrDeepLink && window._qrDeepLink.loc===localAtual){
-    const sala=window._qrDeepLink.sala;
-    window._qrDeepLink=null;
-    setTimeout(()=>definirSala(sala),200);
-  }
-}
-
-// ═══════════════════════════════════════
-// QR SCANNER
-// ═══════════════════════════════════════
-function iniciarScanner(){
-  if(salaAtual) return;
-  $('qrPh').classList.add('hidden');
-  if(qrScanner) return;
-  try{
-    qrScanner=new Html5Qrcode('qr-reader');
-    qrScanner.start(
-      {facingMode:'environment'},
-      {fps:10,qrbox:{width:210,height:210}},
-      txt=>{
-        // Formato esperado: LOCAL|NOME_SALA  (gerado pelo nosso QR)
-        const decoded=decodeURIComponent(txt.trim());
-        let sala=decoded, loc=localAtual;
-        if(decoded.includes('|')){
-          const parts=decoded.split('|');
-          loc=parts[0]; sala=parts[1];
-          // se local diferente do atual, ignora e avisa
-          if(loc!==localAtual){
-            toast(`QR de ${LOCAL_NAME[loc]||loc}, mas ronda é de ${LOCAL_NAME[localAtual]}`);
-            return;
-          }
-        }
-        qrScanner.stop().then(()=>{qrScanner.clear();qrScanner=null;$('qrPh').classList.remove('hidden')});
-        definirSala(sala);
-      },
-      ()=>{}
-    ).catch(()=>{
-      qrScanner=null;$('qrPh').classList.remove('hidden');
-      toast('Câmera bloqueada — use a lista abaixo');
-    });
-  }catch(e){qrScanner=null;$('qrPh').classList.remove('hidden')}
 }
 
 function onSelSala(){
@@ -693,22 +507,28 @@ function onSelSala(){
 }
 
 function definirSala(nome){
-  if(salasDaRonda[nome]){toast(`"${nome}" já conferida!`);return}
-  const salas=SALAS[localAtual]||[];
-  if(!salas.includes(nome)){toast(`Sala não encontrada nesta lista`);return}
+  if(salasDaRonda[nome]){showToast(`"${nome}" já conferida!`);return}
   salaAtual=nome;
   $('salaNomeDisplay').textContent=`${localAtual} - ${nome}`;
   $('salaDetected').classList.add('on');
   $('sectionChecklist').classList.remove('hidden');
   resetCheckUI();
-  toast(`Sala "${nome}" identificada ✓`);
-  // Scroll para checklist
   setTimeout(()=>$('sectionChecklist').scrollIntoView({behavior:'smooth',block:'start'}),100);
 }
 
-// ═══════════════════════════════════════
-// CHECKLIST
-// ═══════════════════════════════════════
+// NOVA FUNÇÃO: MARCAR COMO OCUPADA
+function marcarComoOcupada() {
+  CK_KEYS.forEach(k => checks[k] = 'busy'); 
+  $('obsText').value = "SALA OCUPADA - Não foi possível conferir os itens.";
+  const sr = $('sronda'), st = $('srTxt');
+  sr.className = 'sronda busy';
+  st.textContent = 'Sala em uso (Validação ignorada)';
+  $('btnConcluirSala').disabled = false;
+  $('ckBar').style.width = '100%';
+  $('ckLbl').textContent = "4 / 4 itens";
+  showToast("Status: Sala Ocupada");
+}
+
 function setCheck(item,val){
   checks[item]=val;
   const el=$(`ck-${item}`);
@@ -738,28 +558,30 @@ function updateCkProgress(){
   $('ckLbl').textContent=`${done} / ${CK_KEYS.length} itens`;
   const allDone=done===CK_KEYS.length;
   const anyFail=CK_KEYS.some(k=>checks[k]==='fail');
+  const isBusy=CK_KEYS.some(k=>checks[k]==='busy');
   $('btnConcluirSala').disabled=!allDone;
   const sr=$('sronda'),st=$('srTxt');
-  sr.classList.remove('pend','ok','fail');
+  sr.classList.remove('pend','ok','fail','busy');
   if(!allDone){sr.classList.add('pend');st.textContent='Verificação pendente'}
-  else if(anyFail){sr.classList.add('fail');st.textContent='⚠ Itens com falha detectados'}
+  else if(isBusy){sr.classList.add('busy');st.textContent='Sala em uso'}
+  else if(anyFail){sr.classList.add('fail');st.textContent='⚠ Falhas detectadas'}
   else{sr.classList.add('ok');st.textContent='Sala apta para uso'}
 }
 
 function concluirSala(){
   const obs=$('obsText').value.trim();
-  const anyFail=CK_KEYS.some(k=>checks[k]==='fail');
-  salasDaRonda[salaAtual]={checks:{...checks},obs,status:anyFail?'fail':'ok',ts:new Date().toISOString()};
+  const isBusy = CK_KEYS.some(k => checks[k] === 'busy');
+  const anyFail = CK_KEYS.some(k => checks[k] === 'fail');
+  let statusFinal = isBusy ? 'busy' : (anyFail ? 'fail' : 'ok');
+
+  salasDaRonda[salaAtual]={checks:{...checks},obs,status:statusFinal,ts:new Date().toISOString()};
   salaAtual='';
   $('salaDetected').classList.remove('on');
   $('sectionChecklist').classList.add('hidden');
-  $('selSala').value='';
   resetCheckUI();
   updateGlobalProgress();
   renderSalasList();
   populateSelSala();
-  toast(`Sala registrada! ✓`);
-  // verificar se concluiu tudo
   const falt=(SALAS[localAtual]||[]).filter(s=>!salasDaRonda[s]);
   if(falt.length===0) mostrarRelatorio();
 }
@@ -768,42 +590,33 @@ function cancelarSala(){
   salaAtual='';
   $('salaDetected').classList.remove('on');
   $('sectionChecklist').classList.add('hidden');
-  $('selSala').value='';
   resetCheckUI();
-  if(qrScanner){qrScanner.stop().catch(()=>{});qrScanner=null}
-  $('qrPh').classList.remove('hidden');
 }
 
-// ═══════════════════════════════════════
-// PROGRESSO GLOBAL + LISTA SALAS
-// ═══════════════════════════════════════
 function updateGlobalProgress(){
   const salas=SALAS[localAtual]||[];
   const total=salas.length;
   const done=Object.keys(salasDaRonda).length;
-  const pend=total-done;
   const pct=Math.round(done/total*100);
   $('globalBar').style.width=pct+'%';
   $('globalLbl').textContent=`${done} / ${total} salas`;
   $('gTotal').textContent=total;
   $('gDone').textContent=done;
-  $('gPend').textContent=pend;
+  $('gPend').textContent=total-done;
 }
 
 function renderSalasList(){
   const salas=SALAS[localAtual]||[];
-  const list=$('salasList');
-  list.innerHTML='';
-  // Salas pendentes primeiro, depois concluídas
+  const list=$('salasList'); list.innerHTML='';
   const pendentes=salas.filter(s=>!salasDaRonda[s]);
   const concluidas=salas.filter(s=>!!salasDaRonda[s]);
   [...pendentes,...concluidas].forEach(s=>{
     const feito=!!salasDaRonda[s];
-    const hasFail=feito&&salasDaRonda[s].status==='fail';
+    const status = feito ? salasDaRonda[s].status : '';
+    const ico = feito ? (status === 'busy' ? '🪑' : (status === 'fail' ? '⚠️' : '✅')) : '○';
     const div=document.createElement('div');
     div.className='sala-pill'+(feito?' done':'');
-    div.innerHTML=`<span class="sp-name">${localAtual} - ${s}</span>
-      <span class="sp-ico">${feito?(hasFail?'⚠️':'✅'):'○'}</span>`;
+    div.innerHTML=`<span class="sp-name">${localAtual} - ${s}</span><span class="sp-ico">${ico}</span>`;
     if(!feito) div.onclick=()=>definirSala(s);
     list.appendChild(div);
   });
@@ -811,33 +624,26 @@ function renderSalasList(){
 
 function populateSelSala(){
   const salas=SALAS[localAtual]||[];
-  const pendentes=salas.filter(s=>!salasDaRonda[s]);
-  const sel=$('selSala');
-  sel.innerHTML='<option value="">— Selecione a sala —</option>';
-  pendentes.forEach(s=>{
+  const sel=$('selSala'); sel.innerHTML='<option value="">— Selecione a sala —</option>';
+  salas.filter(s=>!salasDaRonda[s]).forEach(s=>{
     const opt=document.createElement('option');
-    opt.value=s;opt.textContent=`${localAtual} - ${s}`;
+    opt.value=s; opt.textContent=`${localAtual} - ${s}`;
     sel.appendChild(opt);
   });
 }
 
-// ═══════════════════════════════════════
-// RELATÓRIO FINAL
-// ═══════════════════════════════════════
 function mostrarRelatorio(){
-  $('cardIdentSala').classList.add('hidden');
   $('cardPendentes').classList.add('hidden');
   $('secRelatorio').classList.remove('hidden');
   atualizarRelPreview();
-  toast('Todas as salas conferidas! 🎉',3500);
 }
 
 function setItemTI(val){
   itemTI=val;
-  $('rdSim').textContent=val?'(✓) Sim':'( ) Sim';
-  $('rdNao').textContent=!val?'(✓) Não':'( ) Não';
   $('rdSim').classList.toggle('active',val);
   $('rdNao').classList.toggle('active',!val);
+  $('rdSim').textContent = val ? '(✓) Sim' : '( ) Sim';
+  $('rdNao').textContent = !val ? '(✓) Não' : '( ) Não';
   $('obsItemWrap').classList.toggle('hidden',!val);
   atualizarRelPreview();
 }
@@ -848,7 +654,8 @@ function buildRelatorio(){
   const obsIt=$('obsItem').value.trim();
   const linhas=salas.map(s=>{
     const r=salasDaRonda[s];
-    const ico=r?(r.status==='ok'?'✅':'⚠️'):'❌';
+    let ico = '❌';
+    if(r) ico = r.status === 'busy' ? '🪑' : (r.status === 'ok' ? '✅' : '⚠️');
     return`${ico} ${localAtual} - ${s}`;
   }).join('\n');
   const simNao=itemTI?'( X ) Sim  (  ) Não':'(  ) Sim  ( X ) Não';
@@ -857,156 +664,55 @@ function buildRelatorio(){
   return txt;
 }
 
-function atualizarRelPreview(){
-  $('relPreview').textContent=buildRelatorio();
-}
-
+function atualizarRelPreview(){ $('relPreview').textContent=buildRelatorio(); }
 $('obsItem') && $('obsItem').addEventListener('input',atualizarRelPreview);
 
 function enviarRelatorio(){
-  // checar faltando
-  const falt=(SALAS[localAtual]||[]).filter(s=>!salasDaRonda[s]);
-  if(falt.length>0){
-    const a=$('alertFalt');
-    a.innerHTML=`⚠ Salas não conferidas:<br><strong>${falt.map(s=>`${localAtual} - ${s}`).join('<br>')}</strong>`;
-    a.classList.add('on');
-    toast(`Faltam ${falt.length} salas!`);
-    return;
-  }
   const texto=buildRelatorio();
-  const reg={id:Date.now(),local:localAtual,analista,data:new Date().toISOString(),salas:{...salasDaRonda},itemTI,obsItem:$('obsItem').value.trim(),relatorio:texto};
+  const reg={id:Date.now(),local:localAtual,analista,data:new Date().toISOString(),salas:{...salasDaRonda},itemTI,relatorio:texto};
   historico.unshift(reg);
   salvarHistorico();
   atualizarContador();
   enviarWA(texto);
-  toast('Relatório enviado! ✓',3000);
 }
 
-async function enviarWA(txt){
-  try{if(navigator.share){await navigator.share({text:txt});return}}catch(e){}
-  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`,'_blank');
-}
+function enviarWA(txt){ window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(txt)}`,'_blank'); }
 
 function resetRonda(){
   salasDaRonda={};salaAtual='';localAtual='';itemTI=false;
   $('step2').classList.add('hidden');
   $('step1').classList.remove('hidden');
-  $('selLocal').value='';
-  $('inputAnalista').value='';
-  analista='';
-  $('btnIniciar').disabled=true;
+  $('selLocal').value=''; $('inputAnalista').value='';
   $('secRelatorio').classList.add('hidden');
-  $('cardIdentSala').classList.remove('hidden');
   $('cardPendentes').classList.remove('hidden');
-  $('alertFalt').classList.remove('on');
   $('hdrSub').textContent='Serasa Experian';
-  setItemTI(false);
-  $('obsItem').value='';
 }
 
-// ═══════════════════════════════════════
-// HISTÓRICO
-// ═══════════════════════════════════════
 function salvarHistorico(){try{localStorage.setItem('ronda_v3',JSON.stringify(historico))}catch(e){}}
-function carregarHistorico(){try{const r=localStorage.getItem('ronda_v3');if(r)historico=JSON.parse(r)}catch(e){historico=[]}}
+function carregarHistorico(){try{const r=localStorage.getItem('ronda_v3');if(r)historico=JSON.parse(r)}catch(e){}}
 function atualizarContador(){$('histCount').textContent=historico.length;$('totalRondas').textContent=historico.length}
 
 function renderHistorico(){
-  $('totalRondas').textContent=historico.length;
   const list=$('histList');
-  if(!historico.length){
-    list.innerHTML=`<div class="hist-empty"><div class="hist-empty-ico">📋</div><div class="hist-empty-txt">Nenhuma ronda registrada</div></div>`;
-    return;
-  }
+  if(!historico.length){ list.innerHTML=`<div class="hist-empty">Nenhuma ronda registrada</div>`; return; }
   list.innerHTML=historico.map((r,i)=>{
     const d=new Date(r.data);
-    const vals=Object.values(r.salas);
-    const ok=vals.filter(s=>s.status==='ok').length;
-    const fail=vals.filter(s=>s.status==='fail').length;
+    const fail=Object.values(r.salas).filter(s=>s.status==='fail').length;
     return`<div class="hi ${fail?'fail':'ok'}" onclick="openHist(${i})">
-      <div class="hi-top">
-        <div><div class="hi-local">📍 ${LOCAL_NAME[r.local]}</div><div class="hi-analista">👤 ${r.analista}</div></div>
-        <span class="hi-badge ${fail?'fail':'ok'}">${fail?'FALHA':'OK'}</span>
-      </div>
-      <div class="hi-meta"><span>🗓️ ${formatDT(d)}</span><span>🏢 ${(SALAS[r.local]||[]).length} salas</span></div>
-      <div class="pills"><span class="pill ok">✅ ${ok} OK</span>${fail?`<span class="pill fail">⚠️ ${fail} Falhas</span>`:''}</div>
+      <div class="hi-top"><div>📍 ${LOCAL_NAME[r.local]}</div><span class="hi-badge ${fail?'fail':'ok'}">${fail?'FALHA':'OK'}</span></div>
+      <div class="hi-meta">🗓️ ${formatDT(d)}</div>
     </div>`;
   }).join('');
 }
 
 function openHist(idx){
-  modalHistReg=historico[idx];const r=modalHistReg;
-  const d=new Date(r.data);
-  $('mhTitle').textContent=`${LOCAL_NAME[r.local]} — ${formatDate(d)}`;
-  const salas=SALAS[r.local]||[];
-  const rows=salas.map(s=>{
-    const d2=r.salas[s];
-    const ico=d2?(d2.status==='ok'?'✅':'⚠️'):'❌';
-    const obs=d2?.obs?` <em style="color:var(--muted);font-size:10px">· ${d2.obs}</em>`:'';
-    return`<div class="mrow" style="flex-direction:column;align-items:flex-start;gap:2px;padding:7px 0">
-      <div style="font-size:12px;color:var(--text)">${ico} ${r.local} - ${s}${obs}</div></div>`;
-  }).join('');
-  $('mhBody').innerHTML=`
-    <div class="mrow"><div class="mrow-lbl">Analista</div><div class="mrow-val">👤 ${r.analista}</div></div>
-    <div class="mrow"><div class="mrow-lbl">Data/Hora</div><div class="mrow-val">${formatDT(d)}</div></div>
-    <div class="divider"></div>${rows}`;
+  const r=historico[idx];
+  $('mhTitle').textContent=`${LOCAL_NAME[r.local]}`;
+  $('mhBody').innerHTML=`<div class="mrow"><div class="mrow-lbl">Analista</div><div class="mrow-val">${r.analista}</div></div>`;
   $('moHist').classList.add('open');
 }
 
-function reenviarHist(){if(modalHistReg)enviarWA(modalHistReg.relatorio)}
 function closeMo(id,e){if(e.target===$(id))$(id).classList.remove('open')}
-
-// ═══════════════════════════════════════
-// QR CODE GENERATOR — payload = "LOCAL|SALA"
-// ═══════════════════════════════════════
-function renderQrGrid(){
-  const loc=$('selQrLocal').value;
-  const salas=SALAS[loc]||[];
-  const grid=$('qrGrid');grid.innerHTML='';
-  Object.values(qrInsts).forEach(q=>{try{q.clear()}catch(e){}});qrInsts={};
-
-  salas.forEach((sala,i)=>{
-    // Payload com deep link: LOCAL|SALA (o app vai ler e pré-carregar)
-    const payload=`${loc}|${sala}`;
-    const fullName=`${loc} - ${sala}`;
-    const id=`qrg-${i}`;
-    const div=document.createElement('div');
-    div.className='qr-gen-item';
-    div.innerHTML=`<div class="qr-gen-box" id="${id}"></div><div class="qr-gen-name">${fullName}</div>`;
-    div.onclick=()=>openQrModal(payload,fullName);
-    grid.appendChild(div);
-
-    setTimeout(()=>{
-      try{
-        const inst=new QRCode(id,{text:payload,width:70,height:70,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.M});
-        qrInsts[id]=inst;
-      }catch(e){}
-    },50);
-  });
-}
-
-function openQrModal(payload,nome){
-  mqSrc=payload;
-  $('mqTitle').textContent=nome;
-  $('mqLabel').textContent=`${nome}\n(aponta direto para a avaliação desta sala)`;
-  $('mqBox').innerHTML='';
-  try{new QRCode('mqBox',{text:payload,width:220,height:220,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.M})}catch(e){}
-  $('moQr').classList.add('open');
-}
-
-function printQr(){
-  const box=$('mqBox');
-  const label=$('mqLabel').textContent;
-  const img=box.querySelector('img');
-  const src=img?img.src:'';
-  const win=window.open('','_blank');
-  win.document.write(`<html><body style="display:flex;flex-direction:column;align-items:center;padding:30px;font-family:monospace;text-align:center">
-    <img src="${src}" style="width:200px;height:200px">
-    <p style="font-size:13px;letter-spacing:2px;margin-top:14px;max-width:250px;line-height:1.6">${label.replace(/\n/g,'<br>')}</p>
-    <script>window.onload=()=>{window.print();window.close()}<\/script>
-  </body></html>`);
-  win.document.close();
-}
 </script>
 </body>
 </html>
