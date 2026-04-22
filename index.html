@@ -1,308 +1,379 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+"<!DOCTYPE html>
+<html lang=\"pt-BR\">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#0066ff">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Ronda Salas">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<meta charset=\"UTF-8\">
+<meta name=\"viewport\" content=\"width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no\">
+<meta name=\"theme-color\" content=\"#E11D48\">
+<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">
+<meta name=\"apple-mobile-web-app-status-bar-style\" content=\"default\">
+<meta name=\"apple-mobile-web-app-title\" content=\"Ronda Salas\">
+<link rel=\"manifest\" href=\"manifest.json\">
+<link rel=\"apple-touch-icon\" href=\"icons/icon-192.png\">
+<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
+<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
+<link href=\"https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Manrope:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">
 <title>Ronda de Salas — Serasa</title>
 <style>
-:root{
-  --bg:#050d1a;--sur:#0a1628;--sur2:#0f1e35;--bor:#1a3050;
-  --blue:#0066ff;--bluel:#3385ff;--cyan:#00c8ff;
-  --green:#00e676;--red:#ff3d5a;--amber:#ffaa00;
-  --text:#e8f0ff;--muted:#5a7090;
+/* ---------- TOKENS ---------- */
+:root[data-theme=\"light\"]{
+  --bg:#F4F4F5; --sur:#FFFFFF; --sur2:#F4F4F5;
+  --primary:#E11D48; --primary-dark:#BE123C; --primary-bg:#FFF1F2;
+  --secondary:#18181B;
+  --text:#18181B; --muted:#52525B; --tert:#A1A1AA;
+  --bor:#E4E4E7; --bor-soft:#F4F4F5;
+  --ok-bg:#ECFDF5; --ok-tx:#059669; --ok-bor:#10B981;
+  --fail-bg:#FEF2F2; --fail-tx:#DC2626; --fail-bor:#EF4444;
+  --warn-bg:#FFFBEB; --warn-tx:#D97706; --warn-bor:#F59E0B;
+  --pend-bg:#F4F4F5; --pend-tx:#52525B;
+  --whatsapp:#25D366;
+  --shadow:0 2px 12px -4px rgba(0,0,0,.08);
+  --shadow-lg:0 10px 30px -10px rgba(0,0,0,.2);
+  --modal-bd:rgba(24,24,27,.55);
+}
+:root[data-theme=\"dark\"]{
+  --bg:#0A0A0B; --sur:#18181B; --sur2:#27272A;
+  --primary:#FB7185; --primary-dark:#E11D48; --primary-bg:rgba(251,113,133,.12);
+  --secondary:#FAFAFA;
+  --text:#FAFAFA; --muted:#D4D4D8; --tert:#71717A;
+  --bor:#27272A; --bor-soft:#27272A;
+  --ok-bg:rgba(16,185,129,.12); --ok-tx:#34D399; --ok-bor:#10B981;
+  --fail-bg:rgba(239,68,68,.12); --fail-tx:#F87171; --fail-bor:#EF4444;
+  --warn-bg:rgba(245,158,11,.12); --warn-tx:#FBBF24; --warn-bor:#F59E0B;
+  --pend-bg:#27272A; --pend-tx:#A1A1AA;
+  --whatsapp:#25D366;
+  --shadow:0 2px 12px -4px rgba(0,0,0,.5);
+  --shadow-lg:0 10px 40px -10px rgba(0,0,0,.6);
+  --modal-bd:rgba(0,0,0,.75);
 }
 *,*::before,*::after{box-sizing:border-box}
-html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
-  color:var(--text);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
-  background:radial-gradient(circle at 10% 0%,rgba(0,102,255,.2),transparent 45%),
-             radial-gradient(circle at 90% 100%,rgba(0,200,255,.1),transparent 45%),var(--bg)}
+html,body{margin:0;padding:0;min-height:100vh;font-family:'Manrope',sans-serif;
+  color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;transition:background .2s,color .2s}
 .shell{max-width:440px;margin:0 auto;padding:0 0 60px;min-height:100dvh;display:flex;flex-direction:column}
 
 /* HEADER */
-.hdr{background:var(--sur);border-bottom:1px solid var(--bor);padding:13px 16px 11px;position:relative;overflow:hidden;flex-shrink:0}
-.hdr::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--blue),var(--cyan))}
-.hdr-row{display:flex;align-items:center;justify-content:space-between}
-.hdr-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;letter-spacing:2px;color:#fff;text-transform:uppercase}
-.hdr-sub{font-size:9px;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-top:2px;font-family:'DM Mono',monospace}
-.hdr-chip{font-size:9px;letter-spacing:1px;padding:3px 8px;border:1px solid rgba(0,102,255,.5);color:var(--bluel);border-radius:2px}
+.hdr{background:var(--sur);border-bottom:1px solid var(--bor);padding:16px 20px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;transition:background .2s,border-color .2s}
+.hdr-brand{font-family:'Outfit',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.5px;color:var(--text)}
+.hdr-sub{font-family:'Manrope',sans-serif;font-weight:500;font-size:12px;color:var(--muted);margin-top:2px}
+.hdr-right{display:flex;align-items:center;gap:10px}
+.theme-btn{width:38px;height:38px;border-radius:50%;background:var(--bg);border:1px solid var(--bor);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all .2s;padding:0}
+.theme-btn:hover{background:var(--sur2)}
+.hdr-chip{font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;letter-spacing:.5px;
+  padding:4px 10px;background:var(--primary-bg);color:var(--primary);border-radius:999px}
 
 /* TABS */
-.tabs{display:flex;background:var(--sur);border-bottom:1px solid var(--bor);overflow-x:auto;flex-shrink:0}
-.tab{flex:1;min-width:0;padding:11px 5px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;
-  text-transform:uppercase;color:var(--muted);border:none;background:none;cursor:pointer;
-  border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;text-align:center}
-.tab.active{color:var(--bluel);border-bottom-color:var(--blue)}
-.tc{display:inline_flex;align-items:center;justify-content:center;width:15px;height:15px;
-  border-radius:50%;background:var(--blue);color:#fff;font-size:8px;margin-left:3px;vertical-align:middle}
+.tabs{display:flex;background:var(--sur);border-bottom:1px solid var(--bor);flex-shrink:0}
+.tab{flex:1;padding:14px 6px;font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--tert);border:none;background:none;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.tc{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;
+  padding:0 5px;border-radius:9px;background:var(--primary);color:#fff;font-size:10px;font-weight:700}
 
 /* CONTENT */
-.content{flex:1;padding:14px}
+.content{flex:1;padding:18px}
 .page{display:none}.page.active{display:block}
 
-/* CARD */
-.card{background:var(--sur);border:1px solid var(--bor);border-radius:6px;padding:13px 15px;margin-bottom:13px;position:relative;overflow:hidden}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan))}
-.card-title{font-family:'Syne',sans-serif;font-weight:800;font-size:12px;letter-spacing:2px;color:#fff;text-transform:uppercase;margin-bottom:11px}
+/* HERO */
+.hero{background:var(--sur);border:1px solid var(--bor);border-radius:20px;padding:22px;box-shadow:var(--shadow);margin-bottom:20px}
+.hero-ico{color:var(--primary);font-size:28px;line-height:1}
+.hero-t{font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;color:var(--text);margin:10px 0 6px;letter-spacing:-.3px}
+.hero-d{font-family:'Manrope',sans-serif;font-weight:500;font-size:13px;color:var(--muted);line-height:19px}
 
 /* LABEL */
-.lbl{font-size:9px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin:0 0 7px;font-family:'DM Mono',monospace}
+.tiny{font-family:'Manrope',sans-serif;font-weight:700;font-size:10px;letter-spacing:1.5px;color:var(--muted);margin:4px 0 8px;text-transform:uppercase}
 
 /* SELECT */
-.sel{width:100%;appearance:none;-webkit-appearance:none;background:var(--sur2);
-  border:1px solid rgba(0,102,255,.4);border-radius:4px;color:var(--text);
-  font-family:'DM Mono',monospace;font-weight:500;font-size:12px;letter-spacing:1px;
-  padding:11px 34px 11px 12px;cursor:pointer;
-  background-image:linear-gradient(45deg,transparent 50%,var(--cyan) 50%),linear-gradient(135deg,var(--cyan) 50%,transparent 50%);
-  background-position:calc(100% - 15px) 50%,calc(100% - 9px) 50%;
-  background-size:6px 6px,6px 6px;background-repeat:no-repeat;
-  transition:box-shadow .2s,border-color .2s}
-.sel:focus{outline:none;border-color:var(--blue);box-shadow:0 0 14px rgba(0,102,255,.3)}
-.sel option{background:var(--bg);color:var(--text)}
+.sel{width:100%;appearance:none;-webkit-appearance:none;background:var(--sur);
+  border:1px solid var(--bor);border-radius:14px;color:var(--text);
+  font-family:'Outfit',sans-serif;font-weight:600;font-size:16px;
+  padding:16px 40px 16px 16px;cursor:pointer;box-shadow:var(--shadow);
+  background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 18px) 50%,calc(100% - 12px) 50%;
+  background-size:6px 6px,6px 6px;background-repeat:no-repeat;transition:border-color .2s,box-shadow .2s}
+.sel:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-bg)}
+.sel option{background:var(--sur);color:var(--text)}
 
-/* GLOBAL PROGRESS */
-.gprog{background:var(--sur);border:1px solid var(--bor);border-radius:6px;padding:12px 14px;margin-bottom:13px;position:relative;overflow:hidden}
-.gprog::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan))}
-.gprog-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
-.gs{text-align:center}
-.gs-n{font-family:'Syne',sans-serif;font-weight:800;font-size:20px}
-.gs-l{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:2px;font-family:'DM Mono',monospace}
-.pb-wrap{background:var(--sur2);border-radius:20px;height:4px;overflow:hidden;margin-bottom:4px}
-.pb{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .4s}
-.pb-lbl{font-size:10px;letter-spacing:2px;color:var(--muted);text-align:right;font-family:'DM Mono',monospace}
+/* CARD */
+.card{background:var(--sur);border:1px solid var(--bor);border-radius:20px;padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+.card-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.card-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;color:var(--text);letter-spacing:-.2px}
+.card-count{font-family:'Manrope',sans-serif;font-weight:700;font-size:12px;color:var(--primary)}
 
-/* SALAS PENDENTES LIST */
-.salas-list{display:flex;flex-direction:column;gap:5px;max-height:240px;overflow-y:auto;padding-right:2px}
-.salas-list::-webkit-scrollbar{width:2px}
-.salas-list::-webkit-scrollbar-thumb{background:var(--bor);border-radius:2px}
-.sala-pill{display:flex;align-items:center;justify-content:space-between;
-  padding:9px 12px;background:var(--sur2);border:1px solid var(--bor);
-  border-radius:4px;cursor:pointer;transition:all .2s;font-size:11px;letter-spacing:.5px}
-.sala-pill:hover{border-color:rgba(0,102,255,.5);background:rgba(0,102,255,.06)}
-.sala-pill .sp-name{flex:1;color:var(--text)}
-.sala-pill .sp-ico{font-size:14px;flex-shrink:0;margin-left:6px}
-.sala-pill.done{border-color:rgba(0,230,118,.35);background:rgba(0,230,118,.05);opacity:.55;pointer-events:none}
-.sala-pill.done .sp-name{color:var(--green);text-decoration:line-through}
+/* PROGRESS */
+.pb-wrap{height:10px;background:var(--bg);border-radius:999px;overflow:hidden;margin-bottom:6px}
+.pb-wrap.sm{height:6px;margin:2px 0 8px}
+.pb{height:100%;background:var(--primary);border-radius:999px;transition:width .5s ease-out}
+.pb-lbl{font-family:'Manrope',sans-serif;font-weight:600;font-size:12px;color:var(--muted);text-align:right;margin-bottom:10px}
+.gprog-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+.gs{background:var(--bg);border-radius:12px;padding:12px;text-align:center}
+.gs-n{font-family:'Outfit',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.5px}
+.gs-l{font-family:'Manrope',sans-serif;font-weight:600;font-size:10px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
 
 /* SALA DETECTED */
-.sala-det{background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.35);
-  border-radius:4px;padding:11px 13px;display:none;align-items:center;gap:10px;margin-top:10px}
-.sala-det.on{display:flex}
-.sd-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px rgba(0,230,118,.7);flex-shrink:0}
-.sd-name{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;letter-spacing:1px;color:var(--green)}
+.sala-det{display:none;align-items:center;gap:8px;padding:10px 14px;background:var(--ok-bg);
+  border:1px solid var(--ok-bor);border-radius:999px;margin:4px 0 12px;width:fit-content}
+.sala-det.on{display:inline-flex}
+.sd-dot{width:8px;height:8px;border-radius:50%;background:var(--ok-bor);animation:pulse 1.6s infinite}
+.sd-name{font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;color:var(--ok-tx)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* STATUS PILL */
+.sronda{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;margin:6px 0 4px;
+  font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;letter-spacing:.5px;text-transform:uppercase}
+.sronda.pend{background:var(--pend-bg);color:var(--pend-tx)}
+.sronda.ok{background:var(--ok-bg);color:var(--ok-tx)}
+.sronda.fail{background:var(--fail-bg);color:var(--fail-tx)}
+.sronda.busy{background:var(--warn-bg);color:var(--warn-tx)}
+.sr-dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+
+/* OCUPADA BUTTON */
+.btn-occ{margin-top:14px;width:100%;padding:14px;border-radius:14px;border:1px solid var(--warn-bor);
+  background:var(--warn-bg);color:var(--warn-tx);font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;
+  display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .2s}
+.btn-occ.active{background:var(--warn-bor);color:#fff}
 
 /* CHECKLIST */
-.cklist{display:flex;flex-direction:column;gap:9px}
-.ck{display:flex;align-items:center;gap:11px;padding:11px 13px;background:var(--sur2);
-  border:1px solid var(--bor);border-radius:4px;transition:all .2s}
-.ck.ok{border-color:rgba(0,230,118,.4);background:rgba(0,230,118,.05)}
-.ck.fail{border-color:rgba(255,61,90,.4);background:rgba(255,61,90,.05)}
-.ck-ico{font-size:18px;flex-shrink:0}
-.ck-info{flex:1}
-.ck-name{font-family:'Syne',sans-serif;font-weight:600;font-size:12px;letter-spacing:1px;color:var(--text)}
-.ck-tog{display:flex;gap:4px;flex-shrink:0}
-.tb{width:34px;height:28px;border-radius:3px;border:1px solid var(--bor);
-  background:transparent;cursor:pointer;font-size:13px;transition:all .15s;
-  display:flex;align-items:center;justify-content:center;color:var(--muted)}
-.tb.ok-a{background:rgba(0,230,118,.2);border-color:var(--green);color:var(--green)}
-.tb.fail-a{background:rgba(255,61,90,.2);border-color:var(--red);color:var(--red)}
-
-/* STATUS */
-.sronda{display:flex;align-items:center;gap:8px;padding:9px 13px;border-radius:4px;
-  margin-bottom:13px;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-family:'DM Mono',monospace}
-.sronda.pend{background:rgba(255,170,0,.08);border:1px solid rgba(255,170,0,.3);color:var(--amber)}
-.sronda.ok{background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.3);color:var(--green)}
-.sronda.fail{background:rgba(255,61,90,.08);border:1px solid rgba(255,61,90,.3);color:var(--red)}
-.sronda.busy{background:rgba(90,112,144,0.15);border:1px solid var(--muted);color:var(--text)}
-.sr-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
+.cklist{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.ck{display:flex;align-items:center;justify-content:space-between;padding:12px;
+  background:var(--sur);border:1px solid var(--bor);border-radius:14px;transition:all .2s}
+.ck.ok{background:var(--ok-bg)}
+.ck.fail{background:var(--fail-bg)}
+.ck-left{display:flex;align-items:center;gap:10px;flex:1}
+.ck-icobox{width:34px;height:34px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--muted);transition:all .2s}
+.ck.ok .ck-icobox{background:var(--ok-bor);color:#fff}
+.ck.fail .ck-icobox{background:var(--fail-bor);color:#fff}
+.ck-name{font-family:'Outfit',sans-serif;font-weight:600;font-size:14px;color:var(--text)}
+.seg{display:flex;gap:3px;padding:3px;background:var(--bg);border-radius:10px}
+.tb{width:40px;height:32px;border-radius:8px;border:none;background:transparent;cursor:pointer;
+  font-size:15px;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .15s}
+.tb.ok-a{background:var(--ok-bor);color:#fff}
+.tb.fail-a{background:var(--fail-bor);color:#fff}
 
 /* OBS */
-.obs{width:100%;min-height:75px;background:var(--sur2);border:1px solid var(--bor);
-  border-radius:4px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;
-  padding:10px 12px;resize:vertical;line-height:1.6;transition:border-color .2s,box-shadow .2s}
-.obs:focus{outline:none;border-color:var(--blue);box-shadow:0 0 14px rgba(0,102,255,.2)}
-.obs::placeholder{color:var(--muted)}
+.obs{width:100%;min-height:80px;background:var(--bg);border:1px solid var(--bor);
+  border-radius:14px;color:var(--text);font-family:'Manrope',sans-serif;font-size:14px;
+  padding:12px;resize:vertical;line-height:1.5;margin-top:12px;transition:border-color .2s,box-shadow .2s}
+.obs:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-bg)}
+.obs::placeholder{color:var(--tert)}
 
 /* BUTTONS */
-.btn{width:100%;padding:13px;font-family:'Syne',sans-serif;font-weight:800;font-size:11px;
-  letter-spacing:3px;text-transform:uppercase;border-radius:4px;border:none;cursor:pointer;
-  transition:all .15s;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:9px}
+.btn{width:100%;padding:16px;font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;
+  text-transform:uppercase;border-radius:14px;border:none;cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}
 .btn:active:not(:disabled){transform:scale(.98)}
-.btn:disabled{opacity:.28;cursor:not-allowed;transform:none}
-.btn.prim{background:linear-gradient(135deg,var(--blue),var(--bluel));color:#fff}
-.btn.succ{background:linear-gradient(135deg,#00c853,var(--green));color:#001a0a}
-.btn.wa{background:linear-gradient(135deg,#25d366,#0fae5a);color:#051a0a}
-.btn.ghost{background:transparent;border:1px solid var(--bor);color:var(--muted)}
-.btn-row{display:flex;gap:8px}
-.btn-row .btn{flex:1;margin-bottom:0}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.btn.prim{background:var(--primary);color:#fff;box-shadow:0 4px 14px -4px rgba(225,29,72,.4)}
+.btn.succ{background:var(--ok-bor);color:#fff}
+.btn.wa{background:var(--whatsapp);color:#fff;box-shadow:0 4px 14px -4px rgba(37,211,102,.4)}
+.btn.ghost{background:var(--sur);border:1.5px solid var(--bor);color:var(--muted);padding:15px}
+.btn-row{display:flex;gap:8px;margin-top:14px}
+.btn-row .btn{margin-bottom:0}
 
-/* RELATORIO PREVIEW */
-.rel-box{background:#0f0f17;border:1px solid rgba(124,58,237,.3);border-radius:4px;
-  padding:13px 15px;font-size:12px;line-height:1.9;white-space:pre-wrap;
-  color:#d8d8e8;position:relative;font-family:'DM Mono',monospace;margin-bottom:13px}
-.rel-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--blue),var(--cyan))}
+/* SALAS PILLS */
+.salas-list{display:flex;flex-direction:column;gap:6px;margin-top:8px;max-height:340px;overflow-y:auto;padding-right:2px}
+.salas-list::-webkit-scrollbar{width:3px}
+.salas-list::-webkit-scrollbar-thumb{background:var(--bor);border-radius:3px}
+.sala-pill{display:flex;align-items:center;justify-content:space-between;
+  padding:14px;background:var(--bg);border:1px solid var(--bor);border-radius:12px;
+  cursor:pointer;transition:all .2s;font-family:'Manrope',sans-serif;font-weight:600;font-size:13px;color:var(--text)}
+.sala-pill:hover{border-color:var(--primary);background:var(--primary-bg)}
+.sala-pill.done{background:var(--ok-bg);border-color:var(--ok-bor);opacity:.85;pointer-events:none}
+.sala-pill.done .sp-name{text-decoration:line-through}
+.sala-pill.fail{background:var(--fail-bg);border-color:var(--fail-bor);opacity:.85;pointer-events:none}
+.sala-pill.busy{background:var(--warn-bg);border-color:var(--warn-bor);opacity:.85;pointer-events:none}
+.sp-name{flex:1;padding-right:10px}
+.sp-ico{font-size:16px;flex-shrink:0}
 
-/* HIST */
-.hi{background:var(--sur);border:1px solid var(--bor);border-radius:6px;padding:12px 14px;margin-bottom:9px;position:relative;overflow:hidden;cursor:pointer}
-.hi.ok::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green)}
-.hi.fail::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red)}
-.hi-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px}
-.hi-badge{font-size:8px;letter-spacing:2px;padding:3px 8px;border-radius:2px;text-transform:uppercase}
-.hi-badge.ok{background:rgba(0,230,118,.12);color:var(--green)}
-.hi-badge.fail{background:rgba(255,61,90,.12);color:var(--red)}
+/* RELATORIO */
+.rel-box{background:var(--bg);border:1px solid var(--bor);border-radius:12px;padding:14px;
+  font-family:'Manrope',sans-serif;font-size:12px;line-height:20px;color:var(--text);
+  white-space:pre-wrap;margin-top:8px}
+
+/* EMPTY */
+.empty{text-align:center;padding:70px 20px;color:var(--muted)}
+.empty-ico{font-size:48px;margin-bottom:16px;opacity:.4}
+.empty-t{font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;color:var(--text);margin-bottom:6px}
+.empty-d{font-family:'Manrope',sans-serif;font-weight:500;font-size:13px;color:var(--muted)}
+
+/* HIST ITEM */
+.hi{background:var(--sur);border:1px solid var(--bor);border-left:4px solid var(--ok-bor);
+  border-radius:16px;padding:16px;margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s}
+.hi:active{transform:scale(.99)}
+.hi.fail{border-left-color:var(--fail-bor)}
+.hi-top{display:flex;align-items:center;justify-content:space-between}
+.hi-local{font-family:'Outfit',sans-serif;font-weight:700;font-size:15px;color:var(--text)}
+.hi-date{font-family:'Manrope',sans-serif;font-weight:500;font-size:11px;color:var(--muted);margin-top:4px}
+.hi-badge{padding:4px 10px;border-radius:999px;font-family:'Manrope',sans-serif;font-weight:700;font-size:10px;letter-spacing:1px}
+.hi-badge.ok{background:var(--ok-bg);color:var(--ok-tx)}
+.hi-badge.fail{background:var(--fail-bg);color:var(--fail-tx)}
 
 /* MODAL */
-.mo{position:fixed;inset:0;background:rgba(0,5,15,.9);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;backdrop-filter:blur(4px)}
-.mo.open{display:flex}
-.modal{background:var(--sur);border:1px solid var(--bor);border-radius:8px;width:100%;max-width:400px;max-height:88vh;overflow-y:auto}
-.modal-hdr{padding:14px 16px;border-bottom:1px solid var(--bor);position:sticky;top:0;background:var(--sur);z-index:1;display:flex;align-items:center;justify-content:space-between}
-.modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;letter-spacing:2px;color:#fff}
-.modal-close{width:28px;height:28px;border-radius:50%;background:var(--sur2);border:1px solid var(--bor);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center}
-.modal-body{padding:16px}
+.mo{position:fixed;inset:0;background:var(--modal-bd);display:none;align-items:flex-end;justify-content:center;z-index:100;backdrop-filter:blur(4px)}
+.mo.open{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--sur);border-top-left-radius:26px;border-top-right-radius:26px;
+  width:100%;max-width:440px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;animation:slideUp .25s}
+@keyframes slideUp{from{transform:translateY(40px)}to{transform:translateY(0)}}
+.modal-hdr{padding:16px 20px;border-bottom:1px solid var(--bor);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:17px;color:var(--text)}
+.modal-close{width:32px;height:32px;border-radius:16px;background:var(--bg);border:none;color:var(--muted);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
+.modal-body{overflow-y:auto;flex:1}
+.mopt{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;
+  border-bottom:1px solid var(--bor-soft);cursor:pointer;transition:background .15s}
+.mopt:hover{background:var(--bg)}
+.mopt-left{display:flex;align-items:center;gap:12px}
+.mopt-ico{width:36px;height:36px;border-radius:10px;background:var(--primary-bg);color:var(--primary);
+  display:flex;align-items:center;justify-content:center;font-size:16px}
+.mopt-t{font-family:'Outfit',sans-serif;font-weight:600;font-size:15px;color:var(--text)}
+.mopt-d{font-family:'Manrope',sans-serif;font-weight:500;font-size:11px;color:var(--muted);margin-top:2px}
 
-/* HIST DETALHES */
-.hst-card{background:var(--sur2);border:1px solid var(--bor);border-radius:6px;margin-bottom:10px;overflow:hidden}
-.hst-card-hdr{padding:8px 12px;background:rgba(255,255,255,0.03);display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bor)}
-.hst-sala-n{font-size:11px;font-weight:800;color:var(--text)}
+/* HIST DETAIL */
+.hst-card{background:var(--bg);border:1px solid var(--bor);border-radius:14px;margin-bottom:10px;overflow:hidden}
+.hst-hdr{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--sur);border-bottom:1px solid var(--bor)}
+.hst-name{font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;color:var(--text);flex:1;margin-right:8px}
 .hst-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 12px}
-.hst-item{font-size:10px;display:flex;align-items:center;gap:6px;color:var(--muted)}
-.hst-item.ok{color:var(--green)}
-.hst-item.fail{color:var(--red)}
-.hst-obs{padding:8px 12px;font-size:10px;color:var(--muted);border-top:1px solid rgba(26,48,80,0.4);font-style:italic}
+.hst-item{font-family:'Manrope',sans-serif;font-weight:600;font-size:11px;display:flex;align-items:center;gap:5px;color:var(--muted)}
+.hst-item.ok{color:var(--ok-tx)}
+.hst-item.fail{color:var(--fail-tx)}
+.hst-item.busy{color:var(--warn-tx)}
+.hst-obs{padding:10px 12px;font-family:'Manrope',sans-serif;font-size:11px;color:var(--muted);font-style:italic;border-top:1px solid var(--bor)}
 
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--sur2);border:1px solid var(--blue);color:var(--bluel);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;padding:10px 20px;border-radius:30px;transition:transform .3s;z-index:200;pointer-events:none}
-.toast.show{transform:translateX(-50%) translateY(0)}
+/* TOAST */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(60px);opacity:0;
+  background:var(--secondary);color:var(--bg);font-family:'Manrope',sans-serif;font-weight:600;font-size:12px;letter-spacing:.5px;
+  padding:12px 20px;border-radius:999px;box-shadow:var(--shadow-lg);transition:all .25s;z-index:200;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .hidden{display:none!important}
 </style>
 </head>
 <body>
-<div class="shell">
+<div class=\"shell\">
 
-<div class="hdr">
-  <div class="hdr-row">
-    <div>
-      <div class="hdr-brand">Ronda de Salas</div>
-      <div class="hdr-sub" id="hdrSub">Serasa Experian</div>
-    </div>
-    <div class="hdr-chip">v3.2</div>
+<div class=\"hdr\">
+  <div>
+    <div class=\"hdr-brand\">Ronda de Salas</div>
+    <div class=\"hdr-sub\" id=\"hdrSub\">Serasa Experian</div>
+  </div>
+  <div class=\"hdr-right\">
+    <button class=\"theme-btn\" id=\"themeBtn\" onclick=\"toggleTheme()\" title=\"Alternar tema\" aria-label=\"Alternar tema\">🌙</button>
+    <div class=\"hdr-chip\">v3.3</div>
   </div>
 </div>
 
-<div class="tabs">
-  <button class="tab active" onclick="showPage('ronda')">▶ Ronda</button>
-  <button class="tab" onclick="showPage('historico')">Histórico <span class="tc" id="histCount">0</span></button>
+<div class=\"tabs\">
+  <button class=\"tab active\" onclick=\"showPage('ronda')\">📋 RONDA</button>
+  <button class=\"tab\" onclick=\"showPage('historico')\">🕐 HISTÓRICO <span class=\"tc\" id=\"histCount\">0</span></button>
 </div>
 
-<div class="content">
+<div class=\"content\">
 
-<div class="page active" id="page-ronda">
-  <div id="step1">
-    <div class="card">
-      <div class="card-title">📍 Local da Ronda</div>
-      <select class="sel" id="selLocal" onchange="onLocalChange()">
-        <option value="">— Selecione o local —</option>
-        <option value="BNU">Blumenau</option>
-        <option value="PDC">PDC</option>
-        <option value="BSB">Brasília</option>
-        <option value="JK">JK</option>
-        <option value="REC">Recife</option>
-      </select>
+<div class=\"page active\" id=\"page-ronda\">
+  <div id=\"step1\">
+    <div class=\"hero\">
+      <div class=\"hero-ico\">📍</div>
+      <div class=\"hero-t\">Local da Ronda</div>
+      <div class=\"hero-d\">Selecione o escritório para iniciar a conferência das salas.</div>
     </div>
-    <button class="btn prim" id="btnIniciar" onclick="iniciarRonda()" disabled>▶ Iniciar Ronda</button>
+    <div class=\"tiny\">ESCRITÓRIO</div>
+    <select class=\"sel\" id=\"selLocal\" onchange=\"onLocalChange()\" style=\"margin-bottom:16px\">
+      <option value=\"\">— Selecione o local —</option>
+      <option value=\"BNU\">Blumenau</option>
+      <option value=\"PDC\">PDC</option>
+      <option value=\"BSB\">Brasília</option>
+      <option value=\"JK\">JK</option>
+      <option value=\"REC\">Recife</option>
+    </select>
+    <button class=\"btn prim\" id=\"btnIniciar\" onclick=\"iniciarRonda()\" disabled>▶ INICIAR RONDA</button>
   </div>
 
-  <div id="step2" class="hidden">
-    <div class="gprog">
-      <div class="lbl">Progresso da ronda</div>
-      <div class="pb-wrap"><div class="pb" id="globalBar" style="width:0%"></div></div>
-      <div class="pb-lbl" id="globalLbl">0 / 0 salas</div>
-      <div class="gprog-grid">
-        <div class="gs"><div class="gs-n" id="gTotal">0</div><div class="gs-l">Total</div></div>
-        <div class="gs"><div class="gs-n" id="gDone" style="color:var(--green)">0</div><div class="gs-l">Conferidas</div></div>
-        <div class="gs"><div class="gs-n" id="gPend" style="color:var(--amber)">0</div><div class="gs-l">Pendentes</div></div>
+  <div id=\"step2\" class=\"hidden\">
+    <div class=\"card\">
+      <div class=\"tiny\">PROGRESSO DA RONDA</div>
+      <div class=\"pb-wrap\"><div class=\"pb\" id=\"globalBar\" style=\"width:0%\"></div></div>
+      <div class=\"pb-lbl\" id=\"globalLbl\">0 / 0 salas</div>
+      <div class=\"gprog-grid\">
+        <div class=\"gs\"><div class=\"gs-n\" id=\"gTotal\" style=\"color:var(--text)\">0</div><div class=\"gs-l\">Total</div></div>
+        <div class=\"gs\"><div class=\"gs-n\" id=\"gDone\" style=\"color:var(--ok-tx)\">0</div><div class=\"gs-l\">Conferidas</div></div>
+        <div class=\"gs\"><div class=\"gs-n\" id=\"gPend\" style=\"color:var(--warn-tx)\">0</div><div class=\"gs-l\">Pendentes</div></div>
       </div>
     </div>
 
-    <div id="cardIdentSala" class="hidden">
-      <div class="sala-det" id="salaDetected"><div class="sd-dot"></div>
-        <div><div class="sd-name" id="salaNomeDisplay">—</div></div>
-      </div>
-      <select id="selSala" onchange="onSelSala()"><option value="">—</option></select>
-    </div>
-
-    <div id="sectionChecklist" class="hidden">
-      <div class="card">
-        <div class="card-title">✅ Verificação</div>
-        <div class="pb-wrap"><div class="pb" id="ckBar" style="width:0%"></div></div>
-        <div class="pb-lbl" id="ckLbl">0 / 4 itens</div>
+    <div id=\"sectionChecklist\" class=\"hidden\">
+      <div class=\"sala-det\" id=\"salaDetected\"><div class=\"sd-dot\"></div>
+        <div class=\"sd-name\" id=\"salaNomeDisplay\">—</div>
       </div>
 
-      <div class="sronda pend" id="sronda">
-        <div class="sr-dot"></div><span id="srTxt">Verificação pendente</span>
+      <div class=\"card\">
+        <div class=\"card-row\">
+          <div class=\"card-title\">Verificação</div>
+          <div class=\"card-count\" id=\"ckLbl\">0 / 4</div>
+        </div>
+        <div class=\"pb-wrap sm\"><div class=\"pb\" id=\"ckBar\" style=\"width:0%\"></div></div>
+
+        <div class=\"sronda pend\" id=\"sronda\">
+          <div class=\"sr-dot\"></div><span id=\"srTxt\">Verificação pendente</span>
+        </div>
+
+        <button class=\"btn-occ\" id=\"btnOcupada\" onclick=\"toggleOcupada()\">👥 Sala Ocupada / Em Reunião</button>
+
+        <div class=\"cklist\">
+          <div class=\"ck\" id=\"ck-camera\"><div class=\"ck-left\"><div class=\"ck-icobox\">📷</div><div class=\"ck-name\">Câmera</div></div>
+            <div class=\"seg\"><button class=\"tb ok-btn\" onclick=\"setCheck('camera','ok')\">✓</button><button class=\"tb fail-btn\" onclick=\"setCheck('camera','fail')\">✗</button></div></div>
+          <div class=\"ck\" id=\"ck-audio\"><div class=\"ck-left\"><div class=\"ck-icobox\">🔊</div><div class=\"ck-name\">Áudio</div></div>
+            <div class=\"seg\"><button class=\"tb ok-btn\" onclick=\"setCheck('audio','ok')\">✓</button><button class=\"tb fail-btn\" onclick=\"setCheck('audio','fail')\">✗</button></div></div>
+          <div class=\"ck\" id=\"ck-tv\"><div class=\"ck-left\"><div class=\"ck-icobox\">📺</div><div class=\"ck-name\">TV</div></div>
+            <div class=\"seg\"><button class=\"tb ok-btn\" onclick=\"setCheck('tv','ok')\">✓</button><button class=\"tb fail-btn\" onclick=\"setCheck('tv','fail')\">✗</button></div></div>
+          <div class=\"ck\" id=\"ck-cabos\"><div class=\"ck-left\"><div class=\"ck-icobox\">🔌</div><div class=\"ck-name\">Cabos</div></div>
+            <div class=\"seg\"><button class=\"tb ok-btn\" onclick=\"setCheck('cabos','ok')\">✓</button><button class=\"tb fail-btn\" onclick=\"setCheck('cabos','fail')\">✗</button></div></div>
+        </div>
+
+        <textarea class=\"obs\" id=\"obsText\" placeholder=\"Observações...\"></textarea>
+
+        <div class=\"btn-row\">
+          <button class=\"btn ghost\" onclick=\"cancelarSala()\" style=\"flex:1\">✕ Cancelar</button>
+          <button class=\"btn succ\" id=\"btnConcluirSala\" onclick=\"concluirSala()\" style=\"flex:2\" disabled>✓ Concluir</button>
+        </div>
       </div>
+    </div>
 
-      <button class="btn ghost" id="btnOcupada" onclick="toggleOcupada()" style="border-color: var(--amber); color: var(--amber); margin-bottom: 15px;">
-        👥 Sala Ocupada / Em Reunião
-      </button>
+    <div class=\"card\" id=\"cardPendentes\">
+      <div class=\"card-title\">Salas</div>
+      <div class=\"salas-list\" id=\"salasList\"></div>
+    </div>
 
-      <div class="cklist">
-        <div class="ck" id="ck-camera"><div class="ck-ico">📷</div><div class="ck-info"><div class="ck-name">Câmera</div></div><div class="ck-tog"><button class="tb ok-btn" onclick="setCheck('camera','ok')">✓</button><button class="tb fail-btn" onclick="setCheck('camera','fail')">✗</button></div></div>
-        <div class="ck" id="ck-audio"><div class="ck-ico">🔊</div><div class="ck-info"><div class="ck-name">Áudio</div></div><div class="ck-tog"><button class="tb ok-btn" onclick="setCheck('audio','ok')">✓</button><button class="tb fail-btn" onclick="setCheck('audio','fail')">✗</button></div></div>
-        <div class="ck" id="ck-tv"><div class="ck-ico">📺</div><div class="ck-info"><div class="ck-name">TV</div></div><div class="ck-tog"><button class="tb ok-btn" onclick="setCheck('tv','ok')">✓</button><button class="tb fail-btn" onclick="setCheck('tv','fail')">✗</button></div></div>
-        <div class="ck" id="ck-cabos"><div class="ck-ico">🔌</div><div class="ck-info"><div class="ck-name">Cabos</div></div><div class="ck-tog"><button class="tb ok-btn" onclick="setCheck('cabos','ok')">✓</button><button class="tb fail-btn" onclick="setCheck('cabos','fail')">✗</button></div></div>
+    <div class=\"hidden\" id=\"secRelatorio\">
+      <div class=\"card\">
+        <div class=\"card-title\">Relatório da Ronda</div>
+        <div class=\"rel-box\" id=\"relPreview\"></div>
       </div>
-
-      <textarea class="obs" id="obsText" placeholder="Observações..." style="margin-top:12px"></textarea>
-
-      <div class="btn-row" style="margin-top:12px">
-        <button class="btn ghost" onclick="cancelarSala()" style="flex:.5">✕</button>
-        <button class="btn succ" id="btnConcluirSala" onclick="concluirSala()" style="flex:1.5" disabled>✓ Concluir</button>
-      </div>
+      <button class=\"btn wa\" onclick=\"enviarRelatorio()\">⬈ ENVIAR WHATSAPP</button>
+      <button class=\"btn ghost\" onclick=\"resetRonda()\">↻ NOVA RONDA</button>
     </div>
-
-    <div class="card" id="cardPendentes">
-      <div class="card-title">⏳ Salas Pendentes</div>
-      <div class="salas-list" id="salasList"></div>
-    </div>
-
-    <div class="hidden" id="secRelatorio">
-      <div class="rel-box" id="relPreview"></div>
-      <button class="btn wa" onclick="enviarRelatorio()">⬈ Enviar WhatsApp</button>
-      <button class="btn ghost" onclick="resetRonda()">↩ Nova Ronda</button>
-    </div>
-  </div>
-</div>
-
-<div class="page" id="page-historico">
-  <div id="histList"></div>
-</div>
-
-</div>
-</div>
-
-<div class="mo" id="moHist" onclick="closeMo('moHist',event)">
-  <div class="modal">
-    <div class="modal-hdr">
-      <div class="modal-title" id="mhTitle">Detalhes da Ronda</div>
-      <button class="modal-close" onclick="$('moHist').classList.remove('open')">✕</button>
-    </div>
-    <div class="modal-body" id="mhBody"></div>
-    <div style="padding:16px" id="mhFooter"></div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class=\"page\" id=\"page-historico\">
+  <div id=\"histList\"></div>
+</div>
+
+</div>
+</div>
+
+<div class=\"mo\" id=\"moHist\" onclick=\"closeMo('moHist',event)\">
+  <div class=\"modal\">
+    <div class=\"modal-hdr\">
+      <div class=\"modal-title\" id=\"mhTitle\">Detalhes da Ronda</div>
+      <button class=\"modal-close\" onclick=\"$('moHist').classList.remove('open')\">✕</button>
+    </div>
+    <div class=\"modal-body\" style=\"padding:16px\" id=\"mhBody\"></div>
+    <div style=\"padding:0 16px 16px\" id=\"mhFooter\"></div>
+  </div>
+</div>
+
+<div class=\"toast\" id=\"toast\"></div>
 
 <script>
 const SALAS = {
@@ -314,193 +385,184 @@ const SALAS = {
 };
 const LOCAL_NAME={BNU:'Blumenau',PDC:'PDC',BSB:'Brasília',JK:'JK',REC:'Recife'};
 const CK_KEYS=['camera','audio','tv','cabos'];
+const THEME_KEY='ronda_theme_v1';
+const HIST_KEY='ronda_v3_2';
 
-let localAtual='', salaAtual='', itemTI=false, salasDaRonda={}, historico=[];
+let localAtual='', salaAtual='', salasDaRonda={}, historico=[];
 let checks={camera:null,audio:null,tv:null,cabos:null};
 
 const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,'0');
 
-window.addEventListener('load', () => { carregarHistorico(); atualizarContador(); });
+/* THEME */
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);$('themeBtn').textContent=t==='dark'?'☀️':'🌙';document.querySelector('meta[name=\"theme-color\"]').setAttribute('content',t==='dark'?'#18181B':'#E11D48')}
+function toggleTheme(){const c=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';applyTheme(c);try{localStorage.setItem(THEME_KEY,c)}catch(e){}}
+(function initTheme(){let t='light';try{t=localStorage.getItem(THEME_KEY)||(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}applyTheme(t)})();
 
-function formatDate(d){ d=new Date(d); return`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}` }
-function formatTime(d){ d=new Date(d); return`${pad(d.getHours())}h${pad(d.getMinutes())}` }
-function showToast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
+window.addEventListener('load',()=>{carregarHistorico();atualizarContador()});
+
+function formatDate(d){d=new Date(d);return`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`}
+function formatTime(d){d=new Date(d);return`${pad(d.getHours())}h${pad(d.getMinutes())}`}
+function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
 
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   $(`page-${id}`).classList.add('active');
   const tabs=document.querySelectorAll('.tab');
-  if(id==='ronda') tabs[0].classList.add('active');
-  if(id==='historico'){ tabs[1].classList.add('active'); renderHistorico(); }
+  if(id==='ronda')tabs[0].classList.add('active');
+  if(id==='historico'){tabs[1].classList.add('active');renderHistorico()}
 }
 
-function onLocalChange(){ localAtual=$('selLocal').value; $('btnIniciar').disabled = !localAtual; }
+function onLocalChange(){localAtual=$('selLocal').value;$('btnIniciar').disabled=!localAtual}
 
 function iniciarRonda(){
-  salasDaRonda={}; salaAtual=''; resetCheckUI();
-  $('step1').classList.add('hidden'); $('step2').classList.remove('hidden');
-  $('sectionChecklist').classList.add('hidden'); $('secRelatorio').classList.add('hidden');
+  salasDaRonda={};salaAtual='';resetCheckUI();
+  $('step1').classList.add('hidden');$('step2').classList.remove('hidden');
+  $('sectionChecklist').classList.add('hidden');$('secRelatorio').classList.add('hidden');
+  $('cardPendentes').classList.remove('hidden');
   $('hdrSub').textContent=`Serasa · ${LOCAL_NAME[localAtual]}`;
-  updateGlobalProgress(); renderSalasList(); populateSelSala();
+  updateGlobalProgress();renderSalasList();
 }
-
-function onSelSala(){ const v=$('selSala').value; if(v) definirSala(v); $('selSala').value=''; }
 
 function definirSala(nome){
-  salaAtual=nome; $('salaNomeDisplay').textContent=`${localAtual} - ${nome}`;
-  $('salaDetected').classList.add('on'); $('sectionChecklist').classList.remove('hidden'); resetCheckUI();
+  salaAtual=nome;$('salaNomeDisplay').textContent=`${localAtual} - ${nome}`;
+  $('salaDetected').classList.add('on');$('sectionChecklist').classList.remove('hidden');resetCheckUI();
 }
 
-function toggleOcupada() {
-  const isCurrentlyBusy = CK_KEYS.every(k => checks[k] === 'busy');
-  
-  if (!isCurrentlyBusy) {
-    // Marcar como ocupada
-    CK_KEYS.forEach(k => checks[k] = 'busy');
-    $('obsText').value = "SALA OCUPADA - Não foi possível conferir os itens.";
-    $('btnOcupada').style.background = "rgba(255,170,0,0.2)";
-    showToast("Status: Sala Ocupada");
-  } else {
-    // Desmarcar ocupada (limpa tudo)
-    resetCheckUI();
-    $('btnOcupada').style.background = "transparent";
-    showToast("Status limpo para conferência");
-  }
+function toggleOcupada(){
+  const busy=CK_KEYS.every(k=>checks[k]==='busy');
+  if(!busy){CK_KEYS.forEach(k=>checks[k]='busy');$('obsText').value='SALA OCUPADA - Não foi possível conferir os itens.';$('btnOcupada').classList.add('active');CK_KEYS.forEach(k=>{const el=$(`ck-${k}`);el.classList.remove('ok','fail');el.querySelectorAll('.tb').forEach(b=>b.classList.remove('ok-a','fail-a'))});showToast('Status: Sala Ocupada')}
+  else{resetCheckUI();showToast('Status limpo para conferência')}
   updateCkProgress();
 }
 
 function setCheck(item,val){
-  checks[item]=val;
-  const el=$(`ck-${item}`); el.classList.remove('ok','fail'); el.classList.add(val);
-  el.querySelector('.ok-btn').classList.toggle('ok-a',val==='ok');
-  el.querySelector('.fail-btn').classList.toggle('fail-a',val==='fail');
+  checks[item]=checks[item]===val?null:val;
+  const el=$(`ck-${item}`);el.classList.remove('ok','fail');if(checks[item])el.classList.add(val==='ok'?'ok':'fail');
+  el.querySelector('.ok-btn').classList.toggle('ok-a',checks[item]==='ok');
+  el.querySelector('.fail-btn').classList.toggle('fail-a',checks[item]==='fail');
   updateCkProgress();
 }
 
 function resetCheckUI(){
   checks={camera:null,audio:null,tv:null,cabos:null};
-  CK_KEYS.forEach(k=>{ const el=$(`ck-${k}`); el.classList.remove('ok','fail'); el.querySelectorAll('.tb').forEach(b=>b.classList.remove('ok-a','fail-a')); });
-  $('obsText').value=''; 
-  $('btnOcupada').style.background = "transparent";
-  updateCkProgress();
+  CK_KEYS.forEach(k=>{const el=$(`ck-${k}`);el.classList.remove('ok','fail');el.querySelectorAll('.tb').forEach(b=>b.classList.remove('ok-a','fail-a'))});
+  $('obsText').value='';$('btnOcupada').classList.remove('active');updateCkProgress();
 }
 
 function updateCkProgress(){
   const done=CK_KEYS.filter(k=>checks[k]!==null).length;
-  const pct=Math.round(done/4*100); $('ckBar').style.width=pct+'%'; $('ckLbl').textContent=`${done} / 4 itens`;
-  const isBusy=CK_KEYS.some(k=>checks[k]==='busy');
-  const anyFail=CK_KEYS.some(k=>checks[k]==='fail');
+  const pct=Math.round(done/4*100);$('ckBar').style.width=pct+'%';$('ckLbl').textContent=`${done} / 4`;
+  const isBusy=CK_KEYS.some(k=>checks[k]==='busy'),anyFail=CK_KEYS.some(k=>checks[k]==='fail');
   $('btnConcluirSala').disabled=done<4;
-  const sr=$('sronda'),st=$('srTxt'); sr.className='sronda '+(done<4?'pend':(isBusy?'busy':(anyFail?'fail':'ok')));
+  const sr=$('sronda'),st=$('srTxt');sr.className='sronda '+(done<4?'pend':(isBusy?'busy':(anyFail?'fail':'ok')));
   st.textContent=done<4?'Verificação pendente':(isBusy?'Sala em uso':(anyFail?'⚠ Falhas detectadas':'Sala apta para uso'));
 }
 
 function concluirSala(){
   salasDaRonda[salaAtual]={checks:{...checks},obs:$('obsText').value.trim(),status:$('sronda').className.split(' ')[1]};
-  salaAtual=''; $('salaDetected').classList.remove('on'); $('sectionChecklist').classList.add('hidden');
-  updateGlobalProgress(); renderSalasList(); populateSelSala();
-  if(Object.keys(salasDaRonda).length===(SALAS[localAtual]||[]).length) mostrarRelatorio();
+  salaAtual='';$('salaDetected').classList.remove('on');$('sectionChecklist').classList.add('hidden');
+  updateGlobalProgress();renderSalasList();
+  if(Object.keys(salasDaRonda).length===(SALAS[localAtual]||[]).length)mostrarRelatorio();
 }
 
 function updateGlobalProgress(){
-  const s=SALAS[localAtual]||[], d=Object.keys(salasDaRonda).length, t=s.length;
-  $('globalBar').style.width=(d/t*100)+'%'; $('globalLbl').textContent=`${d} / ${t} salas`;
-  $('gTotal').textContent=t; $('gDone').textContent=d; $('gPend').textContent=t-d;
+  const s=SALAS[localAtual]||[],d=Object.keys(salasDaRonda).length,t=s.length;
+  $('globalBar').style.width=(t?(d/t*100):0)+'%';$('globalLbl').textContent=`${d} / ${t} salas`;
+  $('gTotal').textContent=t;$('gDone').textContent=d;$('gPend').textContent=t-d;
 }
 
 function renderSalasList(){
-  const s=SALAS[localAtual]||[], list=$('salasList'); list.innerHTML='';
+  const s=SALAS[localAtual]||[],list=$('salasList');list.innerHTML='';
   [...s.filter(x=>!salasDaRonda[x]),...s.filter(x=>!!salasDaRonda[x])].forEach(x=>{
-    const f=!!salasDaRonda[x], st=f?salasDaRonda[x].status:'', ico=f?(st==='busy'?'👥':(st==='fail'?'⚠️':'✅')):'○';
-    const d=document.createElement('div'); d.className='sala-pill'+(f?' done':'');
-    d.innerHTML=`<span class="sp-name">${localAtual} - ${x}</span><span class="sp-ico">${ico}</span>`;
-    if(!f) d.onclick=()=>definirSala(x); list.appendChild(d);
+    const f=!!salasDaRonda[x],st=f?salasDaRonda[x].status:'';
+    const ico=!f?'○':(st==='busy'?'👥':(st==='fail'?'⚠️':'✅'));
+    const d=document.createElement('div');d.className='sala-pill'+(f?' '+st:'');
+    d.innerHTML=`<span class=\"sp-name\">${localAtual} - ${x}</span><span class=\"sp-ico\">${ico}</span>`;
+    if(!f)d.onclick=()=>definirSala(x);
+    list.appendChild(d);
   });
 }
 
-function populateSelSala(){
-  const s=SALAS[localAtual]||[], sel=$('selSala'); sel.innerHTML='<option value="">— Selecione a sala —</option>';
-  s.filter(x=>!salasDaRonda[x]).forEach(x=>{ const o=document.createElement('option'); o.value=x; o.textContent=`${localAtual} - ${x}`; sel.appendChild(o); });
-}
+function mostrarRelatorio(){$('cardPendentes').classList.add('hidden');$('secRelatorio').classList.remove('hidden');atualizarRelPreview()}
 
-function mostrarRelatorio(){ $('cardPendentes').classList.add('hidden'); $('secRelatorio').classList.remove('hidden'); atualizarRelPreview(); }
-
-function buildRelatorio(dados = null){
-  const local = dados ? dados.local : localAtual;
-  const salas = dados ? dados.salas : salasDaRonda;
-  const d = dados ? new Date(dados.data) : new Date();
-
+function buildRelatorio(dados=null){
+  const local=dados?dados.local:localAtual,salas=dados?dados.salas:salasDaRonda,d=dados?new Date(dados.data):new Date();
   const linhas=(SALAS[local]||[]).map(s=>{
-    const r=salas[s]; 
-    let ico = '👥'; let statusTxt = '';
-    if(r) {
-      if (r.status === 'busy') statusTxt = ': Sala ocupada';
-      else if (r.status === 'ok') ico = '✅';
-      else if (r.status === 'fail') ico = '⚠️';
-    }
+    const r=salas[s];let ico='👥',statusTxt='';
+    if(r){if(r.status==='busy')statusTxt=': Sala ocupada';else if(r.status==='ok')ico='✅';else if(r.status==='fail')ico='⚠️'}
     return`${ico} ${local} - ${s}${statusTxt}`;
-  }).join('\n');
-  
-  return `📍 ${LOCAL_NAME[local]}\n📊 Ronda Diária\n🗓️ ${formatDate(d)}\n⏰ ${formatTime(d)}\n\n──── Salas de reuniões ────\n${linhas}\n\nItens TI encontrados?\n(  ) Sim  ( X ) Não`;
+  }).join('
+');
+  return`📍 ${LOCAL_NAME[local]}
+📊 Ronda Diária
+🗓️ ${formatDate(d)}
+⏰ ${formatTime(d)}
+
+──── Salas de reuniões ────
+${linhas}
+
+Itens TI encontrados?
+(  ) Sim  ( X ) Não`;
 }
 
-function atualizarRelPreview(){ $('relPreview').textContent=buildRelatorio(); }
+function atualizarRelPreview(){$('relPreview').textContent=buildRelatorio()}
 
 function enviarRelatorio(){
-  const t=buildRelatorio(), reg={id:Date.now(),local:localAtual,data:new Date().toISOString(),salas:{...salasDaRonda},relatorio:t};
-  historico.unshift(reg); salvarHistorico(); atualizarContador();
+  const t=buildRelatorio(),reg={id:Date.now(),local:localAtual,data:new Date().toISOString(),salas:{...salasDaRonda},relatorio:t};
+  historico.unshift(reg);salvarHistorico();atualizarContador();
   window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`,'_blank');
 }
 
 function resetRonda(){
-  salasDaRonda={}; localAtual=''; $('step2').classList.add('hidden'); $('step1').classList.remove('hidden');
-  $('selLocal').value=''; $('secRelatorio').classList.add('hidden'); $('cardPendentes').classList.remove('hidden');
+  salasDaRonda={};localAtual='';$('step2').classList.add('hidden');$('step1').classList.remove('hidden');
+  $('selLocal').value='';$('btnIniciar').disabled=true;
+  $('secRelatorio').classList.add('hidden');$('cardPendentes').classList.remove('hidden');
+  $('hdrSub').textContent='Serasa Experian';
 }
 
-function salvarHistorico(){ try{localStorage.setItem('ronda_v3_2',JSON.stringify(historico))}catch(e){} }
-function carregarHistorico(){ try{const r=localStorage.getItem('ronda_v3_2'); if(r)historico=JSON.parse(r)}catch(e){} }
-function atualizarContador(){ $('histCount').textContent=historico.length; }
+function cancelarSala(){salaAtual='';$('salaDetected').classList.remove('on');$('sectionChecklist').classList.add('hidden')}
+
+function salvarHistorico(){try{localStorage.setItem(HIST_KEY,JSON.stringify(historico))}catch(e){}}
+function carregarHistorico(){try{const r=localStorage.getItem(HIST_KEY);if(r)historico=JSON.parse(r)}catch(e){}}
+function atualizarContador(){$('histCount').textContent=historico.length}
 
 function renderHistorico(){
-  const list=$('histList'); if(!historico.length){ list.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">📋 Vazio</div>'; return; }
-  list.innerHTML=historico.map((r,i)=>`
-    <div class="hi ${Object.values(r.salas).some(x=>x.status==='fail')?'fail':'ok'}" onclick="openHist(${i})">
-      <div class="hi-top"><div>📍 ${LOCAL_NAME[r.local]}</div><span class="hi-badge ${Object.values(r.salas).some(x=>x.status==='fail')?'fail':'ok'}">${Object.values(r.salas).some(x=>x.status==='fail')?'FALHA':'OK'}</span></div>
-      <div style="font-size:10px;color:var(--muted)">🗓️ ${formatDate(r.data)} às ${formatTime(r.data)}</div>
-    </div>`).join('');
+  const list=$('histList');
+  if(!historico.length){list.innerHTML='<div class=\"empty\"><div class=\"empty-ico\">📋</div><div class=\"empty-t\">Nenhuma ronda registrada</div><div class=\"empty-d\">Suas rondas enviadas aparecerão aqui.</div></div>';return}
+  list.innerHTML=historico.map((r,i)=>{
+    const fail=Object.values(r.salas).some(x=>x.status==='fail');
+    return`<div class=\"hi ${fail?'fail':'ok'}\" onclick=\"openHist(${i})\">
+      <div class=\"hi-top\"><div><div class=\"hi-local\">📍 ${LOCAL_NAME[r.local]}</div><div class=\"hi-date\">🗓️ ${formatDate(r.data)} às ${formatTime(r.data)}</div></div>
+      <span class=\"hi-badge ${fail?'fail':'ok'}\">${fail?'FALHA':'OK'}</span></div>
+    </div>`;
+  }).join('');
 }
 
 function openHist(i){
-  const r=historico[i]; $('mhTitle').textContent=`Ronda ${LOCAL_NAME[r.local]}`;
-  let html = '';
-  for(let s in r.salas) {
-    const sala = r.salas[s];
-    const isBusy = sala.status === 'busy';
-    html += `
-      <div class="hst-card">
-        <div class="hst-card-hdr">
-          <span class="hst-sala-n">${s}</span>
-          <span style="font-size:10px; color:${sala.status==='ok'?'var(--green)':(isBusy?'var(--amber)':'var(--red)')}">${sala.status.toUpperCase()}</span>
-        </div>
-        <div class="hst-grid">
-          <div class="hst-item ${sala.checks.camera==='ok'?'ok':(sala.checks.camera==='fail'?'fail':'')}">📷 Câmera: ${sala.checks.camera || '-'}</div>
-          <div class="hst-item ${sala.checks.audio==='ok'?'ok':(sala.checks.audio==='fail'?'fail':'')}">🔊 Áudio: ${sala.checks.audio || '-'}</div>
-          <div class="hst-item ${sala.checks.tv==='ok'?'ok':(sala.checks.tv==='fail'?'fail':'')}">📺 TV: ${sala.checks.tv || '-'}</div>
-          <div class="hst-item ${sala.checks.cabos==='ok'?'ok':(sala.checks.cabos==='fail'?'fail':'')}">🔌 Cabos: ${sala.checks.cabos || '-'}</div>
-        </div>
-        ${sala.obs ? `<div class="hst-obs">Obs: ${sala.obs}</div>` : ''}
-      </div>`;
+  const r=historico[i];$('mhTitle').textContent=`Ronda ${LOCAL_NAME[r.local]}`;
+  const ICOS={camera:'📷',audio:'🔊',tv:'📺',cabos:'🔌'},LBL={camera:'Câmera',audio:'Áudio',tv:'TV',cabos:'Cabos'};
+  let html=`<div style=\"font-family:Manrope,sans-serif;font-weight:500;font-size:12px;color:var(--muted);margin-bottom:12px\">🗓️ ${formatDate(r.data)} às ${formatTime(r.data)}</div>`;
+  for(let s in r.salas){
+    const sala=r.salas[s],stCls=sala.status;
+    html+=`<div class=\"hst-card\">
+      <div class=\"hst-hdr\"><span class=\"hst-name\">${s}</span>
+        <span class=\"sronda ${stCls}\" style=\"padding:4px 10px;font-size:9px\">${sala.status.toUpperCase()}</span></div>
+      <div class=\"hst-grid\">
+        ${CK_KEYS.map(k=>`<div class=\"hst-item ${sala.checks[k]||''}\">${ICOS[k]} ${LBL[k]}: ${sala.checks[k]||'-'}</div>`).join('')}
+      </div>
+      ${sala.obs?`<div class=\"hst-obs\">Obs: ${sala.obs}</div>`:''}
+    </div>`;
   }
   $('mhBody').innerHTML=html;
-  $('mhFooter').innerHTML=`<button class="btn wa" onclick="reenviarHist(${i})">⬈ Reenviar Relatório</button>`;
+  $('mhFooter').innerHTML=`<button class=\"btn wa\" onclick=\"reenviarHist(${i})\">⬈ REENVIAR RELATÓRIO</button>`;
   $('moHist').classList.add('open');
 }
 
-function reenviarHist(i){ window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(historico[i].relatorio)}`,'_blank'); }
-function closeMo(id,e){ if(e.target==$(id)) $(id).classList.remove('open'); }
-function cancelarSala(){ salaAtual=''; $('salaDetected').classList.remove('on'); $('sectionChecklist').classList.add('hidden'); }
+function reenviarHist(i){window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(historico[i].relatorio)}`,'_blank')}
+function closeMo(id,e){if(e.target==$(id))$(id).classList.remove('open')}
 </script>
 </body>
 </html>
+"
