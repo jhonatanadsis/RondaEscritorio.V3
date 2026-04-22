@@ -3,504 +3,186 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#0066ff">
+<meta name="theme-color" content="#e63854">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Ronda Salas">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<title>Ronda de Salas — Serasa</title>
+<title>Ronda de Salas — Serasa v3.8</title>
 <style>
-:root{
-  --bg:#050d1a;--sur:#0a1628;--sur2:#0f1e35;--bor:#1a3050;
-  --blue:#0066ff;--bluel:#3385ff;--cyan:#00c8ff;
-  --green:#00e676;--red:#ff3d5a;--amber:#ffaa00;
-  --text:#e8f0ff;--muted:#5a7090;
+:root {
+  --bg: #f5f7f9; --sur: #ffffff; --sur2: #fdfdfe; --bor: #e0e6ed;
+  --primary: #e63854; --primary-light: #fcdde2; --text: #2d3436;
+  --muted: #636e72; --green: #00b894; --red: #d63031; --amber: #fdcb6e;
+  --shadow: rgba(0,0,0,0.05);
+}
+[data-theme="dark"] {
+  --bg: #050d1a; --sur: #0a1628; --sur2: #0f1e35; --bor: #1a3050;
+  --primary: #e63854; --primary-light: rgba(230, 56, 84, 0.2);
+  --text: #e8f0ff; --muted: #5a7090; --green: #00e676; --red: #ff3d5a;
+  --amber: #ffaa00; --shadow: rgba(0,0,0,0.3);
 }
 *,*::before,*::after{box-sizing:border-box}
-html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
-  color:var(--text);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
-  background:radial-gradient(circle at 10% 0%,rgba(0,102,255,.2),transparent 45%),
-             radial-gradient(circle at 90% 100%,rgba(0,200,255,.1),transparent 45%),var(--bg)}
-.shell{max-width:440px;margin:0 auto;padding:0 0 60px;min-height:100dvh;display:flex;flex-direction:column}
-
-/* HEADER */
-.hdr{background:var(--sur);border-bottom:1px solid var(--bor);padding:13px 16px 11px;position:relative;overflow:hidden;flex-shrink:0}
-.hdr::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--blue),var(--cyan))}
-.hdr-row{display:flex;align-items:center;justify-content:space-between}
-.hdr-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;letter-spacing:2px;color:#fff;text-transform:uppercase}
-.hdr-sub{font-size:9px;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-top:2px;font-family:'DM Mono',monospace}
-.hdr-chip{font-size:9px;letter-spacing:1px;padding:3px 8px;border:1px solid rgba(0,102,255,.5);color:var(--bluel);border-radius:2px}
-
-/* TABS */
-.tabs{display:flex;background:var(--sur);border-bottom:1px solid var(--bor);overflow-x:auto;flex-shrink:0}
-.tab{flex:1;min-width:0;padding:11px 5px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;
-  text-transform:uppercase;color:var(--muted);border:none;background:none;cursor:pointer;
-  border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;text-align:center}
-.tab.active{color:var(--bluel);border-bottom-color:var(--blue)}
-.tc{display:inline_flex;align-items:center;justify-content:center;width:15px;height:15px;
-  border-radius:50%;background:var(--blue);color:#fff;font-size:8px;margin-left:3px;vertical-align:middle}
-
-/* CONTENT */
-.content{flex:1;padding:14px}
-.page{display:none}.page.active{display:block}
-
-/* CARD */
-.card{background:var(--sur);border:1px solid var(--bor);border-radius:6px;padding:13px 15px;margin-bottom:13px;position:relative;overflow:hidden}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan))}
-.card-title{font-family:'Syne',sans-serif;font-weight:800;font-size:12px;letter-spacing:2px;color:#fff;text-transform:uppercase;margin-bottom:11px}
-
-/* LABEL */
-.lbl{font-size:9px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin:0 0 7px;font-family:'DM Mono',monospace}
-
-/* SELECT */
-.sel{width:100%;appearance:none;-webkit-appearance:none;background:var(--sur2);
-  border:1px solid rgba(0,102,255,.4);border-radius:4px;color:var(--text);
-  font-family:'DM Mono',monospace;font-weight:500;font-size:12px;letter-spacing:1px;
-  padding:11px 34px 11px 12px;cursor:pointer;
-  background-image:linear-gradient(45deg,transparent 50%,var(--cyan) 50%),linear-gradient(135deg,var(--cyan) 50%,transparent 50%);
-  background-position:calc(100% - 15px) 50%,calc(100% - 9px) 50%;
-  background-size:6px 6px,6px 6px;background-repeat:no-repeat;
-  transition:box-shadow .2s,border-color .2s}
-.sel:focus{outline:none;border-color:var(--blue);box-shadow:0 0 14px rgba(0,102,255,.3)}
-.sel option{background:var(--bg);color:var(--text)}
-
-/* GLOBAL PROGRESS */
-.gprog{background:var(--sur);border:1px solid var(--bor);border-radius:6px;padding:12px 14px;margin-bottom:13px;position:relative;overflow:hidden}
-.gprog::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan))}
-.gprog-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
-.gs{text-align:center}
-.gs-n{font-family:'Syne',sans-serif;font-weight:800;font-size:20px}
-.gs-l{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:2px;font-family:'DM Mono',monospace}
-.pb-wrap{background:var(--sur2);border-radius:20px;height:4px;overflow:hidden;margin-bottom:4px}
-.pb{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .4s}
-.pb-lbl{font-size:10px;letter-spacing:2px;color:var(--muted);text-align:right;font-family:'DM Mono',monospace}
-
-/* SALAS PENDENTES LIST */
-.salas-list{display:flex;flex-direction:column;gap:5px;max-height:240px;overflow-y:auto;padding-right:2px}
-.salas-list::-webkit-scrollbar{width:2px}
-.salas-list::-webkit-scrollbar-thumb{background:var(--bor);border-radius:2px}
-.sala-pill{display:flex;align-items:center;justify-content:space-between;
-  padding:9px 12px;background:var(--sur2);border:1px solid var(--bor);
-  border-radius:4px;cursor:pointer;transition:all .2s;font-size:11px;letter-spacing:.5px}
-.sala-pill:hover{border-color:rgba(0,102,255,.5);background:rgba(0,102,255,.06)}
-.sala-pill .sp-name{flex:1;color:var(--text)}
-.sala-pill .sp-ico{font-size:14px;flex-shrink:0;margin-left:6px}
-.sala-pill.done{border-color:rgba(0,230,118,.35);background:rgba(0,230,118,.05);opacity:.55;pointer-events:none}
-.sala-pill.done .sp-name{color:var(--green);text-decoration:line-through}
-
-/* SALA DETECTED */
-.sala-det{background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.35);
-  border-radius:4px;padding:11px 13px;display:none;align-items:center;gap:10px;margin-top:10px}
-.sala-det.on{display:flex}
-.sd-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px rgba(0,230,118,.7);flex-shrink:0}
-.sd-name{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;letter-spacing:1px;color:var(--green)}
-
-/* CHECKLIST */
-.cklist{display:flex;flex-direction:column;gap:9px}
-.ck{display:flex;align-items:center;gap:11px;padding:11px 13px;background:var(--sur2);
-  border:1px solid var(--bor);border-radius:4px;transition:all .2s}
-.ck.ok{border-color:rgba(0,230,118,.4);background:rgba(0,230,118,.05)}
-.ck.fail{border-color:rgba(255,61,90,.4);background:rgba(255,61,90,.05)}
-.ck-ico{font-size:18px;flex-shrink:0}
-.ck-info{flex:1}
-.ck-name{font-family:'Syne',sans-serif;font-weight:600;font-size:12px;letter-spacing:1px;color:var(--text)}
-.ck-tog{display:flex;gap:4px;flex-shrink:0}
-.tb{width:34px;height:28px;border-radius:3px;border:1px solid var(--bor);
-  background:transparent;cursor:pointer;font-size:13px;transition:all .15s;
-  display:flex;align-items:center;justify-content:center;color:var(--muted)}
-.tb.ok-a{background:rgba(0,230,118,.2);border-color:var(--green);color:var(--green)}
-.tb.fail-a{background:rgba(255,61,90,.2);border-color:var(--red);color:var(--red)}
-
-/* STATUS */
-.sronda{display:flex;align-items:center;gap:8px;padding:9px 13px;border-radius:4px;
-  margin-bottom:13px;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-family:'DM Mono',monospace}
-.sronda.pend{background:rgba(255,170,0,.08);border:1px solid rgba(255,170,0,.3);color:var(--amber)}
-.sronda.ok{background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.3);color:var(--green)}
-.sronda.fail{background:rgba(255,61,90,.08);border:1px solid rgba(255,61,90,.3);color:var(--red)}
-.sronda.busy{background:rgba(90,112,144,0.15);border:1px solid var(--muted);color:var(--text)}
-.sr-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
-
-/* OBS */
-.obs{width:100%;min-height:75px;background:var(--sur2);border:1px solid var(--bor);
-  border-radius:4px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;
-  padding:10px 12px;resize:vertical;line-height:1.6;transition:border-color .2s,box-shadow .2s}
-.obs:focus{outline:none;border-color:var(--blue);box-shadow:0 0 14px rgba(0,102,255,.2)}
-.obs::placeholder{color:var(--muted)}
-
-/* BUTTONS */
-.btn{width:100%;padding:13px;font-family:'Syne',sans-serif;font-weight:800;font-size:11px;
-  letter-spacing:3px;text-transform:uppercase;border-radius:4px;border:none;cursor:pointer;
-  transition:all .15s;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:9px}
-.btn:active:not(:disabled){transform:scale(.98)}
-.btn:disabled{opacity:.28;cursor:not-allowed;transform:none}
-.btn.prim{background:linear-gradient(135deg,var(--blue),var(--bluel));color:#fff}
-.btn.succ{background:linear-gradient(135deg,#00c853,var(--green));color:#001a0a}
-.btn.wa{background:linear-gradient(135deg,#25d366,#0fae5a);color:#051a0a}
+body{margin:0;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;transition:0.3s}
+.shell{max-width:440px;margin:0 auto;padding-bottom:100px;min-height:100vh;position:relative}
+.hdr{background:var(--sur);padding:15px 20px;border-bottom:1px solid var(--bor);display:flex;justify-content:space-between;align-items:center}
+.hdr-brand{font-weight:800;font-size:18px;color:var(--primary)}
+.theme-toggle{background:var(--sur2);border:1px solid var(--bor);padding:8px;border-radius:10px;cursor:pointer}
+.tabs{display:flex;background:var(--sur);border-bottom:1px solid var(--bor);position:sticky;top:0;z-index:10}
+.tab{flex:1;padding:15px 5px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);border:none;background:none;border-bottom:3px solid transparent;cursor:pointer}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.card{background:var(--sur);border-radius:16px;padding:20px;margin:15px;box-shadow:0 4px 15px var(--shadow)}
+.card-title{font-weight:800;font-size:16px;margin-bottom:12px}
+.btn{width:100%;padding:15px;border-radius:12px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-transform:uppercase;transition:0.2s}
+.btn.prim{background:linear-gradient(135deg,#f093a2,var(--primary));color:white}
 .btn.ghost{background:transparent;border:1px solid var(--bor);color:var(--muted)}
-.btn-row{display:flex;gap:8px}
-.btn-row .btn{flex:1;margin-bottom:0}
-
-/* RELATORIO PREVIEW */
-.rel-box{background:#0f0f17;border:1px solid rgba(124,58,237,.3);border-radius:4px;
-  padding:13px 15px;font-size:12px;line-height:1.9;white-space:pre-wrap;
-  color:#d8d8e8;position:relative;font-family:'DM Mono',monospace;margin-bottom:13px}
-.rel-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--blue),var(--cyan))}
-
-/* HIST */
-.hi{background:var(--sur);border:1px solid var(--bor);border-radius:6px;padding:12px 14px;margin-bottom:9px;position:relative;overflow:hidden;cursor:pointer}
-.hi.ok::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green)}
-.hi.fail::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red)}
-.hi-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px}
-.hi-badge{font-size:8px;letter-spacing:2px;padding:3px 8px;border-radius:2px;text-transform:uppercase}
-.hi-badge.ok{background:rgba(0,230,118,.12);color:var(--green)}
-.hi-badge.fail{background:rgba(255,61,90,.12);color:var(--red)}
-
-/* MODAL */
-.mo{position:fixed;inset:0;background:rgba(0,5,15,.9);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;backdrop-filter:blur(4px)}
-.mo.open{display:flex}
-.modal{background:var(--sur);border:1px solid var(--bor);border-radius:8px;width:100%;max-width:400px;max-height:88vh;overflow-y:auto}
-.modal-hdr{padding:14px 16px;border-bottom:1px solid var(--bor);position:sticky;top:0;background:var(--sur);z-index:1;display:flex;align-items:center;justify-content:space-between}
-.modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;letter-spacing:2px;color:#fff}
-.modal-close{width:28px;height:28px;border-radius:50%;background:var(--sur2);border:1px solid var(--bor);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center}
-.modal-body{padding:16px}
-
-/* HIST DETALHES */
-.hst-card{background:var(--sur2);border:1px solid var(--bor);border-radius:6px;margin-bottom:10px;overflow:hidden}
-.hst-card-hdr{padding:8px 12px;background:rgba(255,255,255,0.03);display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bor)}
-.hst-sala-n{font-size:11px;font-weight:800;color:var(--text)}
-.hst-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 12px}
-.hst-item{font-size:10px;display:flex;align-items:center;gap:6px;color:var(--muted)}
-.hst-item.ok{color:var(--green)}
-.hst-item.fail{color:var(--red)}
-.hst-obs{padding:8px 12px;font-size:10px;color:var(--muted);border-top:1px solid rgba(26,48,80,0.4);font-style:italic}
-
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--sur2);border:1px solid var(--blue);color:var(--bluel);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;padding:10px 20px;border-radius:30px;transition:transform .3s;z-index:200;pointer-events:none}
-.toast.show{transform:translateX(-50%) translateY(0)}
+.cklist{display:flex;flex-direction:column;gap:10px}
+.ck{display:flex;align-items:center;padding:12px;background:var(--sur2);border-radius:10px;justify-content:space-between;border:1px solid var(--bor)}
+.tb{width:42px;height:36px;border-radius:8px;border:1px solid var(--bor);background:var(--sur);color:var(--muted);cursor:pointer;font-weight:bold}
+.tb.ok-a{background:var(--green);color:white;border-color:var(--green)}
+.tb.fail-a{background:var(--red);color:white;border-color:var(--red)}
+.app-footer{position:absolute;bottom:20px;width:100%;text-align:center;pointer-events:none}
+.signature{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);opacity:0.6;text-transform:uppercase}
+#reader{width:100%;border-radius:12px;overflow:hidden;background:#000;margin-top:10px}
 .hidden{display:none!important}
+#qrGrid{display:grid;grid-template-columns:1fr 1fr;gap:15px;padding:10px}
+.qr-item{background:white;padding:10px;border-radius:8px;text-align:center;color:#333}
 </style>
 </head>
-<body>
+<body data-theme="light">
 <div class="shell">
-
-<div class="hdr">
-  <div class="hdr-row">
-    <div>
-      <div class="hdr-brand">Ronda de Salas</div>
-      <div class="hdr-sub" id="hdrSub">Serasa Experian</div>
-    </div>
-    <div class="hdr-chip">v3.2</div>
-  </div>
-</div>
-
-<div class="tabs">
-  <button class="tab active" onclick="showPage('ronda')">▶ Ronda</button>
-  <button class="tab" onclick="showPage('historico')">Histórico <span class="tc" id="histCount">0</span></button>
-</div>
-
-<div class="content">
-
-<div class="page active" id="page-ronda">
-  <div id="step1">
-    <div class="card">
-      <div class="card-title">📍 Local da Ronda</div>
-      <select class="sel" id="selLocal" onchange="onLocalChange()">
-        <option value="">— Selecione o local —</option>
-        <option value="BNU">Blumenau</option>
-        <option value="PDC">PDC</option>
-        <option value="BSB">Brasília</option>
-        <option value="JK">JK</option>
-        <option value="REC">Recife</option>
-      </select>
-    </div>
-    <button class="btn prim" id="btnIniciar" onclick="iniciarRonda()" disabled>▶ Iniciar Ronda</button>
-  </div>
-
-  <div id="step2" class="hidden">
-    <div class="gprog">
-      <div class="lbl">Progresso da ronda</div>
-      <div class="pb-wrap"><div class="pb" id="globalBar" style="width:0%"></div></div>
-      <div class="pb-lbl" id="globalLbl">0 / 0 salas</div>
-      <div class="gprog-grid">
-        <div class="gs"><div class="gs-n" id="gTotal">0</div><div class="gs-l">Total</div></div>
-        <div class="gs"><div class="gs-n" id="gDone" style="color:var(--green)">0</div><div class="gs-l">Conferidas</div></div>
-        <div class="gs"><div class="gs-n" id="gPend" style="color:var(--amber)">0</div><div class="gs-l">Pendentes</div></div>
+  <header class="hdr">
+    <div><div class="hdr-brand">Ronda de Salas</div><div style="font-size:10px;color:var(--muted)">SERASA EXPERIAN</div></div>
+    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">🌙</button>
+  </header>
+  <nav class="tabs">
+    <button class="tab active" id="t-ronda" onclick="showPage('ronda')">Ronda</button>
+    <button class="tab" id="t-qr" onclick="showPage('qrcode')">QR Code</button>
+    <button class="tab" id="t-hist" onclick="showPage('historico')">Histórico</button>
+  </nav>
+  <main class="content">
+    <div class="page active" id="page-ronda">
+      <div id="step1">
+        <div class="card">
+          <div class="card-title">📍 Local da Ronda</div>
+          <select id="selLocal" class="btn ghost" style="margin-bottom:15px;width:100%" onchange="checkLocal()">
+            <option value="">Selecione o Escritório</option>
+            <option value="BNU">Blumenau</option>
+            <option value="PDC">PDC (São Paulo)</option>
+          </select>
+          <button class="btn prim" id="btnIniciar" onclick="iniciarRonda()" disabled>Iniciar Conferência</button>
+        </div>
+        <div class="card">
+          <div class="card-title">📷 Escanear QR</div>
+          <div id="reader"></div>
+        </div>
+      </div>
+      <div id="step2" class="hidden">
+        <div id="sectionChecklist" class="hidden">
+          <div class="card">
+            <div class="card-title" id="salaNomeDisplay">SALA</div>
+            <div class="cklist">
+              <div class="ck"><span>📷 Câmera</span><div style="display:flex;gap:5px"><button class="tb" id="b-cam-ok" onclick="setCheck('camera','ok')">✓</button><button class="tb" id="b-cam-fail" onclick="setCheck('camera','fail')">✗</button></div></div>
+              <div class="ck"><span>🔊 Áudio</span><div style="display:flex;gap:5px"><button class="tb" id="b-aud-ok" onclick="setCheck('audio','ok')">✓</button><button class="tb" id="b-aud-fail" onclick="setCheck('audio','fail')">✗</button></div></div>
+              <div class="ck"><span>📺 TV</span><div style="display:flex;gap:5px"><button class="tb" id="b-tv-ok" onclick="setCheck('tv','ok')">✓</button><button class="tb" id="b-tv-fail" onclick="setCheck('tv','fail')">✗</button></div></div>
+              <div class="ck"><span>🔌 Cabos</span><div style="display:flex;gap:5px"><button class="tb" id="b-cab-ok" onclick="setCheck('cabos','ok')">✓</button><button class="tb" id="b-cab-fail" onclick="setCheck('cabos','fail')">✗</button></div></div>
+            </div>
+            <button class="btn prim" id="btnSalvarSala" onclick="concluirSala()" style="margin-top:15px" disabled>Salvar Sala</button>
+          </div>
+        </div>
+        <div id="salasList"></div>
       </div>
     </div>
-
-    <div id="cardIdentSala" class="hidden">
-      <div class="sala-det" id="salaDetected"><div class="sd-dot"></div>
-        <div><div class="sd-name" id="salaNomeDisplay">—</div></div>
-      </div>
-      <select id="selSala" onchange="onSelSala()"><option value="">—</option></select>
-    </div>
-
-    <div id="sectionChecklist" class="hidden">
-      <div class="card">
-        <div class="card-title">✅ Verificação</div>
-        <div class="pb-wrap"><div class="pb" id="ckBar" style="width:0%"></div></div>
-        <div class="pb-lbl" id="ckLbl">0 / 4 itens</div>
-      </div>
-
-      <div class="sronda pend" id="sronda">
-        <div class="sr-dot"></div><span id="srTxt">Verificação pendente</span>
-      </div>
-
-      <button class="btn ghost" id="btnOcupada" onclick="toggleOcupada()" style="border-color: var(--amber); color: var(--amber); margin-bottom: 15px;">
-        👥 Sala Ocupada / Em Reunião
-      </button>
-
-      <div class="cklist">
-        <div class="ck" id="ck-camera"><div class="ck-ico">📷</div><div class="ck-info"><div class="ck-name">Câmera</div></div><div class="ck-tog"><button class="tb ok-btn" onclick="setCheck('camera','ok')">✓</button><button class="tb fail-btn" onclick="setCheck('camera','fail')">✗</button></div></div>
-        <div class="ck" id="ck-audio"><div class="ck-ico">🔊</div><div class="ck-info"><div class="ck-name">Áudio</div></div><div class="ck-tog"><button class="tb ok-btn" onclick="setCheck('audio','ok')">✓</button><button class="tb fail-btn" onclick="setCheck('audio','fail')">✗</button></div></div>
-        <div class="ck" id="ck-tv"><div class="ck-ico">📺</div><div class="ck-info"><div class="ck-name">TV</div></div><div class="ck-tog"><button class="tb ok-btn" onclick="setCheck('tv','ok')">✓</button><button class="tb fail-btn" onclick="setCheck('tv','fail')">✗</button></div></div>
-        <div class="ck" id="ck-cabos"><div class="ck-ico">🔌</div><div class="ck-info"><div class="ck-name">Cabos</div></div><div class="ck-tog"><button class="tb ok-btn" onclick="setCheck('cabos','ok')">✓</button><button class="tb fail-btn" onclick="setCheck('cabos','fail')">✗</button></div></div>
-      </div>
-
-      <textarea class="obs" id="obsText" placeholder="Observações..." style="margin-top:12px"></textarea>
-
-      <div class="btn-row" style="margin-top:12px">
-        <button class="btn ghost" onclick="cancelarSala()" style="flex:.5">✕</button>
-        <button class="btn succ" id="btnConcluirSala" onclick="concluirSala()" style="flex:1.5" disabled>✓ Concluir</button>
-      </div>
-    </div>
-
-    <div class="card" id="cardPendentes">
-      <div class="card-title">⏳ Salas Pendentes</div>
-      <div class="salas-list" id="salasList"></div>
-    </div>
-
-    <div class="hidden" id="secRelatorio">
-      <div class="rel-box" id="relPreview"></div>
-      <button class="btn wa" onclick="enviarRelatorio()">⬈ Enviar WhatsApp</button>
-      <button class="btn ghost" onclick="resetRonda()">↩ Nova Ronda</button>
-    </div>
-  </div>
+    <div class="page hidden" id="page-qrcode"><div class="card"><div class="card-title">Gerador</div><div id="qrGrid"></div></div></div>
+    <div class="page hidden" id="page-historico"><div id="histContent"></div></div>
+  </main>
+  <footer class="app-footer"><div class="signature">Desenvolvido por: JSDS</div></footer>
 </div>
-
-<div class="page" id="page-historico">
-  <div id="histList"></div>
-</div>
-
-</div>
-</div>
-
-<div class="mo" id="moHist" onclick="closeMo('moHist',event)">
-  <div class="modal">
-    <div class="modal-hdr">
-      <div class="modal-title" id="mhTitle">Detalhes da Ronda</div>
-      <button class="modal-close" onclick="$('moHist').classList.remove('open')">✕</button>
-    </div>
-    <div class="modal-body" id="mhBody"></div>
-    <div style="padding:16px" id="mhFooter"></div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
 
 <script>
 const SALAS = {
-  BNU:['1ºR.01 - FEIRÃO 01','1ºR.02 - FEIRÃO 02','1ºR.03 - FEIRÃO 03','1ºR.04 - PREMIUM','1ºR.05 - EMPRESTIMO','1ºM.01 - CRÉDITO (MULTIUSO)','1ºM.02 - DÉBITO (MULTIUSO)','1ºF.01 - FOCO 01','1ºF.02 - FOCO 02','1ºF.03 - FOCO 03','1ºF.04 - FOCO 04','1ºAUD - AUDITÓRIO','2ºR.01 - TPV','2ºR.02 - AUTENTICAÇÃO','2ºR.03 - SEGUROS','2ºR.04 - NEGOCIAÇÃO','2ºR.05 - ACORDO','2ºR.06 - NPS','2ºR.07 - SUPER APP','2ºR.08 - MONITORAMENTO','2ºR.09 - PARCEIROS','2ºM.01 - INTEGRAÇÃO (MULTIUSO)','2ºM.02 - NOME LIMPO (MULTIUSO)','1ºO.01 - OFERTAS (Open Meeting)','1ºO.02 - SCORE (Open Meeting)','1ºO.03 - PIX (Open Meeting)'],
-  PDC:['G19.01','R19.01','R19.02','R19.03','R19.04','R19.05','R19.06','R19.07','R19.08','R19.09','R19.10','R20.01','R20.02','R20.05','R20.06','R20.07','R21.Tomorrowland','R22.01','R22.03','R22.04','R22.05','R22.06','R22.07','R23.01','R23.02','R23.03','R23.04','R23.05','R23.06'],
-  BSB:['R04.01','R05.01'],
-  JK:['R01','R02','R03','R04','R05','R06','R07','T02','T04','R01 (2º)','R02 (2º)','R03 (2º)','R04 (2º)','R05 (2º)','R06 (2º)','R07 (2º)','R08 (2º)','R09 (2º)','MEZANINO'],
-  REC:['R01','R02']
+  BNU:['1ºR.01 - FEIRÃO 01','1ºR.02 - FEIRÃO 02','1ºR.03 - FEIRÃO 03','1ºR.04 - PREMIUM','1ºR.05 - EMPRESTIMO','1ºM.01 - CRÉDITO','1ºM.02 - DÉBITO','1ºF.01 - FOCO 01','1ºF.02 - FOCO 02','1ºF.03 - FOCO 03','1ºF.04 - FOCO 04','1ºAUD - AUDITÓRIO','2ºR.01 - TPV','2ºR.02 - AUTENTICAÇÃO','2ºR.03 - SEGUROS','2ºR.04 - NEGOCIAÇÃO','2ºR.05 - ACORDO','2ºR.06 - NPS','2ºR.07 - SUPER APP','2ºR.08 - MONITORAMENTO','2ºR.09 - PARCEIROS','2ºM.01 - INTEGRAÇÃO','2ºM.02 - NOME LIMPO','1ºO.01 - OFERTAS','1ºO.02 - SCORE','1ºO.03 - PIX'],
+  PDC:['G19.01','R19.01','R19.02','R19.03','R19.04','R19.05','R19.06','R19.07','R19.08','R19.09','R19.10','R20.01','R20.02','R20.05','R20.06','R20.07','R21.Tomorrowland','R22.01','R22.03','R22.04','R22.05','R22.06','R22.07','R23.01','R23.02','R23.03','R23.04','R23.05','R23.06']
 };
-const LOCAL_NAME={BNU:'Blumenau',PDC:'PDC',BSB:'Brasília',JK:'JK',REC:'Recife'};
-const CK_KEYS=['camera','audio','tv','cabos'];
+let local='', sala='', dados={}, checks={}, hist=[];
 
-let localAtual='', salaAtual='', itemTI=false, salasDaRonda={}, historico=[];
-let checks={camera:null,audio:null,tv:null,cabos:null};
-
-const $=id=>document.getElementById(id);
-const pad=n=>String(n).padStart(2,'0');
-
-window.addEventListener('load', () => { carregarHistorico(); atualizarContador(); });
-
-function formatDate(d){ d=new Date(d); return`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}` }
-function formatTime(d){ d=new Date(d); return`${pad(d.getHours())}h${pad(d.getMinutes())}` }
-function showToast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
-
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  $(`page-${id}`).classList.add('active');
-  const tabs=document.querySelectorAll('.tab');
-  if(id==='ronda') tabs[0].classList.add('active');
-  if(id==='historico'){ tabs[1].classList.add('active'); renderHistorico(); }
+function toggleTheme(){
+  const b=document.body, t=b.getAttribute('data-theme')==='light'?'dark':'light';
+  b.setAttribute('data-theme',t); document.getElementById('themeBtn').textContent=t==='light'?'🌙':'☀️';
+  localStorage.setItem('theme',t);
 }
 
-function onLocalChange(){ localAtual=$('selLocal').value; $('btnIniciar').disabled = !localAtual; }
+function checkLocal(){ document.getElementById('btnIniciar').disabled=!document.getElementById('selLocal').value; }
 
 function iniciarRonda(){
-  salasDaRonda={}; salaAtual=''; resetCheckUI();
-  $('step1').classList.add('hidden'); $('step2').classList.remove('hidden');
-  $('sectionChecklist').classList.add('hidden'); $('secRelatorio').classList.add('hidden');
-  $('hdrSub').textContent=`Serasa · ${LOCAL_NAME[localAtual]}`;
-  updateGlobalProgress(); renderSalasList(); populateSelSala();
+  local=document.getElementById('selLocal').value;
+  document.getElementById('step1').classList.add('hidden');
+  document.getElementById('step2').classList.remove('hidden');
+  renderSalas();
 }
 
-function onSelSala(){ const v=$('selSala').value; if(v) definirSala(v); $('selSala').value=''; }
-
-function definirSala(nome){
-  salaAtual=nome; $('salaNomeDisplay').textContent=`${localAtual} - ${nome}`;
-  $('salaDetected').classList.add('on'); $('sectionChecklist').classList.remove('hidden'); resetCheckUI();
-}
-
-function toggleOcupada() {
-  const isCurrentlyBusy = CK_KEYS.every(k => checks[k] === 'busy');
-  
-  if (!isCurrentlyBusy) {
-    // Marcar como ocupada
-    CK_KEYS.forEach(k => checks[k] = 'busy');
-    $('obsText').value = "SALA OCUPADA - Não foi possível conferir os itens.";
-    $('btnOcupada').style.background = "rgba(255,170,0,0.2)";
-    showToast("Status: Sala Ocupada");
-  } else {
-    // Desmarcar ocupada (limpa tudo)
-    resetCheckUI();
-    $('btnOcupada').style.background = "transparent";
-    showToast("Status limpo para conferência");
-  }
-  updateCkProgress();
-}
-
-function setCheck(item,val){
-  checks[item]=val;
-  const el=$(`ck-${item}`); el.classList.remove('ok','fail'); el.classList.add(val);
-  el.querySelector('.ok-btn').classList.toggle('ok-a',val==='ok');
-  el.querySelector('.fail-btn').classList.toggle('fail-a',val==='fail');
-  updateCkProgress();
-}
-
-function resetCheckUI(){
-  checks={camera:null,audio:null,tv:null,cabos:null};
-  CK_KEYS.forEach(k=>{ const el=$(`ck-${k}`); el.classList.remove('ok','fail'); el.querySelectorAll('.tb').forEach(b=>b.classList.remove('ok-a','fail-a')); });
-  $('obsText').value=''; 
-  $('btnOcupada').style.background = "transparent";
-  updateCkProgress();
-}
-
-function updateCkProgress(){
-  const done=CK_KEYS.filter(k=>checks[k]!==null).length;
-  const pct=Math.round(done/4*100); $('ckBar').style.width=pct+'%'; $('ckLbl').textContent=`${done} / 4 itens`;
-  const isBusy=CK_KEYS.some(k=>checks[k]==='busy');
-  const anyFail=CK_KEYS.some(k=>checks[k]==='fail');
-  $('btnConcluirSala').disabled=done<4;
-  const sr=$('sronda'),st=$('srTxt'); sr.className='sronda '+(done<4?'pend':(isBusy?'busy':(anyFail?'fail':'ok')));
-  st.textContent=done<4?'Verificação pendente':(isBusy?'Sala em uso':(anyFail?'⚠ Falhas detectadas':'Sala apta para uso'));
-}
-
-function concluirSala(){
-  salasDaRonda[salaAtual]={checks:{...checks},obs:$('obsText').value.trim(),status:$('sronda').className.split(' ')[1]};
-  salaAtual=''; $('salaDetected').classList.remove('on'); $('sectionChecklist').classList.add('hidden');
-  updateGlobalProgress(); renderSalasList(); populateSelSala();
-  if(Object.keys(salasDaRonda).length===(SALAS[localAtual]||[]).length) mostrarRelatorio();
-}
-
-function updateGlobalProgress(){
-  const s=SALAS[localAtual]||[], d=Object.keys(salasDaRonda).length, t=s.length;
-  $('globalBar').style.width=(d/t*100)+'%'; $('globalLbl').textContent=`${d} / ${t} salas`;
-  $('gTotal').textContent=t; $('gDone').textContent=d; $('gPend').textContent=t-d;
-}
-
-function renderSalasList(){
-  const s=SALAS[localAtual]||[], list=$('salasList'); list.innerHTML='';
-  [...s.filter(x=>!salasDaRonda[x]),...s.filter(x=>!!salasDaRonda[x])].forEach(x=>{
-    const f=!!salasDaRonda[x], st=f?salasDaRonda[x].status:'', ico=f?(st==='busy'?'👥':(st==='fail'?'⚠️':'✅')):'○';
-    const d=document.createElement('div'); d.className='sala-pill'+(f?' done':'');
-    d.innerHTML=`<span class="sp-name">${localAtual} - ${x}</span><span class="sp-ico">${ico}</span>`;
-    if(!f) d.onclick=()=>definirSala(x); list.appendChild(d);
+function renderSalas(){
+  const l=document.getElementById('salasList'); l.innerHTML='';
+  SALAS[local].forEach(s=>{
+    const d=document.createElement('div'); d.className='card';
+    d.innerHTML=`<b>${s}</b> ${dados[s]?'✅':'○'}`;
+    if(!dados[s]) d.onclick=()=>abrirSala(s);
+    l.appendChild(d);
   });
 }
 
-function populateSelSala(){
-  const s=SALAS[localAtual]||[], sel=$('selSala'); sel.innerHTML='<option value="">— Selecione a sala —</option>';
-  s.filter(x=>!salasDaRonda[x]).forEach(x=>{ const o=document.createElement('option'); o.value=x; o.textContent=`${localAtual} - ${x}`; sel.appendChild(o); });
+function abrirSala(s){
+  sala=s; document.getElementById('salaNomeDisplay').textContent=s;
+  document.getElementById('sectionChecklist').classList.remove('hidden');
+  checks={}; updateChecksUI();
 }
 
-function mostrarRelatorio(){ $('cardPendentes').classList.add('hidden'); $('secRelatorio').classList.remove('hidden'); atualizarRelPreview(); }
-
-function buildRelatorio(dados = null){
-  const local = dados ? dados.local : localAtual;
-  const salas = dados ? dados.salas : salasDaRonda;
-  const d = dados ? new Date(dados.data) : new Date();
-
-  const linhas=(SALAS[local]||[]).map(s=>{
-    const r=salas[s]; 
-    let ico = '👥'; let statusTxt = '';
-    if(r) {
-      if (r.status === 'busy') statusTxt = ': Sala ocupada';
-      else if (r.status === 'ok') ico = '✅';
-      else if (r.status === 'fail') ico = '⚠️';
-    }
-    return`${ico} ${local} - ${s}${statusTxt}`;
-  }).join('\n');
-  
-  return `📍 ${LOCAL_NAME[local]}\n📊 Ronda Diária\n🗓️ ${formatDate(d)}\n⏰ ${formatTime(d)}\n\n──── Salas de reuniões ────\n${linhas}\n\nItens TI encontrados?\n(  ) Sim  ( X ) Não`;
+function setCheck(i,v){
+  checks[i]=v; updateChecksUI();
+  if(Object.keys(checks).length===4) document.getElementById('btnSalvarSala').disabled=false;
 }
 
-function atualizarRelPreview(){ $('relPreview').textContent=buildRelatorio(); }
-
-function enviarRelatorio(){
-  const t=buildRelatorio(), reg={id:Date.now(),local:localAtual,data:new Date().toISOString(),salas:{...salasDaRonda},relatorio:t};
-  historico.unshift(reg); salvarHistorico(); atualizarContador();
-  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`,'_blank');
+function updateChecksUI(){
+  ['camera','audio','tv','cabos'].forEach(k=>{
+    const v=checks[k];
+    const prefix = k.substring(0,3);
+    document.getElementById(`b-${prefix}-ok`).className='tb '+(v==='ok'?'ok-a':'');
+    document.getElementById(`b-${prefix}-fail`).className='tb '+(v==='fail'?'fail-a':'');
+  });
 }
 
-function resetRonda(){
-  salasDaRonda={}; localAtual=''; $('step2').classList.add('hidden'); $('step1').classList.remove('hidden');
-  $('selLocal').value=''; $('secRelatorio').classList.add('hidden'); $('cardPendentes').classList.remove('hidden');
+function concluirSala(){
+  dados[sala]={...checks}; document.getElementById('sectionChecklist').classList.add('hidden');
+  renderSalas();
 }
 
-function salvarHistorico(){ try{localStorage.setItem('ronda_v3_2',JSON.stringify(historico))}catch(e){} }
-function carregarHistorico(){ try{const r=localStorage.getItem('ronda_v3_2'); if(r)historico=JSON.parse(r)}catch(e){} }
-function atualizarContador(){ $('histCount').textContent=historico.length; }
-
-function renderHistorico(){
-  const list=$('histList'); if(!historico.length){ list.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">📋 Vazio</div>'; return; }
-  list.innerHTML=historico.map((r,i)=>`
-    <div class="hi ${Object.values(r.salas).some(x=>x.status==='fail')?'fail':'ok'}" onclick="openHist(${i})">
-      <div class="hi-top"><div>📍 ${LOCAL_NAME[r.local]}</div><span class="hi-badge ${Object.values(r.salas).some(x=>x.status==='fail')?'fail':'ok'}">${Object.values(r.salas).some(x=>x.status==='fail')?'FALHA':'OK'}</span></div>
-      <div style="font-size:10px;color:var(--muted)">🗓️ ${formatDate(r.data)} às ${formatTime(r.data)}</div>
-    </div>`).join('');
+function showPage(p){
+  document.querySelectorAll('.page').forEach(pg=>pg.classList.add('hidden'));
+  document.getElementById('page-'+p).classList.remove('hidden');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  if(p==='qrcode') { document.getElementById('t-qr').classList.add('active'); genQR(); }
+  else if(p==='historico') document.getElementById('t-hist').classList.add('active');
+  else document.getElementById('t-ronda').classList.add('active');
 }
 
-function openHist(i){
-  const r=historico[i]; $('mhTitle').textContent=`Ronda ${LOCAL_NAME[r.local]}`;
-  let html = '';
-  for(let s in r.salas) {
-    const sala = r.salas[s];
-    const isBusy = sala.status === 'busy';
-    html += `
-      <div class="hst-card">
-        <div class="hst-card-hdr">
-          <span class="hst-sala-n">${s}</span>
-          <span style="font-size:10px; color:${sala.status==='ok'?'var(--green)':(isBusy?'var(--amber)':'var(--red)')}">${sala.status.toUpperCase()}</span>
-        </div>
-        <div class="hst-grid">
-          <div class="hst-item ${sala.checks.camera==='ok'?'ok':(sala.checks.camera==='fail'?'fail':'')}">📷 Câmera: ${sala.checks.camera || '-'}</div>
-          <div class="hst-item ${sala.checks.audio==='ok'?'ok':(sala.checks.audio==='fail'?'fail':'')}">🔊 Áudio: ${sala.checks.audio || '-'}</div>
-          <div class="hst-item ${sala.checks.tv==='ok'?'ok':(sala.checks.tv==='fail'?'fail':'')}">📺 TV: ${sala.checks.tv || '-'}</div>
-          <div class="hst-item ${sala.checks.cabos==='ok'?'ok':(sala.checks.cabos==='fail'?'fail':'')}">🔌 Cabos: ${sala.checks.cabos || '-'}</div>
-        </div>
-        ${sala.obs ? `<div class="hst-obs">Obs: ${sala.obs}</div>` : ''}
-      </div>`;
-  }
-  $('mhBody').innerHTML=html;
-  $('mhFooter').innerHTML=`<button class="btn wa" onclick="reenviarHist(${i})">⬈ Reenviar Relatório</button>`;
-  $('moHist').classList.add('open');
+function genQR(){
+  const g=document.getElementById('qrGrid'); g.innerHTML='';
+  SALAS['BNU'].slice(0,6).forEach(s=>{
+    const d=document.createElement('div'); d.className='qr-item'; d.id='qr-'+s.substring(0,5);
+    g.appendChild(d); new QRCode(d,{text:s,width:80,height:80});
+  });
 }
 
-function reenviarHist(i){ window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(historico[i].relatorio)}`,'_blank'); }
-function closeMo(id,e){ if(e.target==$(id)) $(id).classList.remove('open'); }
-function cancelarSala(){ salaAtual=''; $('salaDetected').classList.remove('on'); $('sectionChecklist').classList.add('hidden'); }
+const scanner = new Html5Qrcode("reader");
+scanner.start({facingMode:"environment"},{fps:10,qrbox:250}, (txt)=>{
+  if(SALAS[local] && SALAS[local].includes(txt)) abrirSala(txt);
+});
+
+if(localStorage.getItem('theme')==='dark') toggleTheme();
 </script>
 </body>
 </html>
