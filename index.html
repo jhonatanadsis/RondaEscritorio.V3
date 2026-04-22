@@ -243,16 +243,8 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
   z-index:200;pointer-events:none;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
-.ck.ocupada{border-color:rgba(120,80,255,.5);background:rgba(120,80,255,.08)}
-.tb.ocup-a{background:rgba(120,80,255,.2);border-color:#a06aff;color:#a06aff}
-
-/* BOTÃO OCUPADA */
-.btn.ocup{background:linear-gradient(135deg,#5b21b6,#7c3aed);color:#fff}
-.btn.ocup:hover:not(:disabled){box-shadow:0 0 22px rgba(124,58,237,.5)}
-
-/* SALA OCUPADA na lista */
-.sala-pill.ocupada{border-color:rgba(120,80,255,.35);background:rgba(120,80,255,.05);pointer-events:none}
-.sala-pill.ocupada .sp-name{color:#a06aff;text-decoration:none;font-style:italic}
+.divider{height:1px;background:var(--bor);margin:4px 0 13px}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
@@ -287,15 +279,11 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 
   <!-- STEP 1: ANALISTA + LOCAL -->
   <div id="step1">
-    <!-- [ANALISTA COMENTADO] Reativar quando necessário
     <div class="card">
       <div class="card-title">👤 Identificação</div>
       <div class="lbl">Nome do analista</div>
       <input class="itext" id="inputAnalista" type="text" placeholder="Digite seu nome..." maxlength="40" oninput="onAnalistaInput()">
     </div>
-    -->
-    <!-- Placeholder oculto para manter referências JS -->
-    <input id="inputAnalista" type="hidden" value="">
     <div class="card" style="margin-top:-5px">
       <div class="card-title">📍 Local da Ronda</div>
       <select class="sel" id="selLocal" onchange="onLocalChange()">
@@ -375,7 +363,7 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
         <span id="srTxt">Verificação pendente</span>
       </div>
 
-      <div class="cklist" id="ckListItens">
+      <div class="cklist">
         <div class="ck" id="ck-camera">
           <div class="ck-ico">📷</div>
           <div class="ck-info"><div class="ck-name">Câmera</div><div class="ck-desc">Câmera da sala funcionando</div></div>
@@ -408,15 +396,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
             <button class="tb fail-btn" onclick="setCheck('cabos','fail')">✗</button>
           </div>
         </div>
-        <!-- ITEM SALA OCUPADA — exclusivo: quando marcado, oculta os outros itens -->
-        <div class="ck" id="ck-ocupada" style="border-color:rgba(120,80,255,.3)">
-          <div class="ck-ico">🔒</div>
-          <div class="ck-info"><div class="ck-name">Sala Ocupada</div><div class="ck-desc">Sala em uso — não foi possível verificar</div></div>
-          <div class="ck-tog">
-            <button class="tb ok-btn" id="tb-ocupada-ok" onclick="setOcupada(true)" style="width:60px;font-size:10px;letter-spacing:1px">Marcar</button>
-            <button class="tb fail-btn" id="tb-ocupada-no" onclick="setOcupada(false)" style="display:none;width:60px;font-size:10px;letter-spacing:1px">Limpar</button>
-          </div>
-        </div>
       </div>
 
       <div class="card" style="margin-top:12px">
@@ -432,14 +411,7 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 
     <!-- SALAS PENDENTES -->
     <div class="card" id="cardPendentes">
-      <div class="card-title">⏳ Salas</div>
-      <div class="lbl">Selecione a sala para iniciar a verificação</div>
-      <select class="sel" id="selSalaVis" onchange="onSelSalaVis()" style="margin-bottom:12px">
-        <option value="">— Selecione a sala —</option>
-      </select>
-      <div style="font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;line-height:1.6;font-family:'DM Mono',monospace">
-        ○ Pendente &nbsp;·&nbsp; ✅ OK &nbsp;·&nbsp; ⚠️ Falha &nbsp;·&nbsp; 🔒 Ocupada
-      </div>
+      <div class="card-title">⏳ Salas Pendentes</div>
       <div class="salas-list" id="salasList"></div>
     </div>
 
@@ -575,7 +547,6 @@ const CK_LBL={camera:'Câmera',audio:'Áudio',tv:'TV',cabos:'Cabos'};
 // ═══════════════════════════════════════
 let analista='', localAtual='', salaAtual='';
 let checks={camera:null,audio:null,tv:null,cabos:null};
-let salaOcupada=false;
 let salasDaRonda={};   // { sala: { checks, obs, status, ts } }
 let historico=[];
 let qrScanner=null;
@@ -653,11 +624,11 @@ function onLocalChange(silent=false){
 }
 
 function checkBtnIniciar(){
-  $('btnIniciar').disabled=!localAtual; // [ANALISTA COMENTADO] era: !(analista && localAtual)
+  $('btnIniciar').disabled=!(analista && localAtual);
 }
 
 function iniciarRonda(){
-  if(!localAtual) return; // [ANALISTA COMENTADO] era: if(!analista||!localAtual)
+  if(!analista||!localAtual) return;
   salasDaRonda={};
   salaAtual='';
   resetCheckUI();
@@ -721,12 +692,6 @@ function onSelSala(){
   $('selSala').value='';
 }
 
-function onSelSalaVis(){
-  const v=$('selSalaVis').value;
-  if(v) definirSala(v);
-  $('selSalaVis').value='';
-}
-
 function definirSala(nome){
   if(salasDaRonda[nome]){toast(`"${nome}" já conferida!`);return}
   const salas=SALAS[localAtual]||[];
@@ -755,53 +720,18 @@ function setCheck(item,val){
   updateCkProgress();
 }
 
-function setOcupada(val){
-  salaOcupada=val;
-  const itemOcupada=$('ck-ocupada');
-  if(val){
-    // marca ocupada e oculta os outros itens
-    itemOcupada.classList.add('ocupada');
-    $('tb-ocupada-ok').style.display='none';
-    $('tb-ocupada-no').style.display='';
-    CK_KEYS.forEach(k=>{ $(`ck-${k}`).style.display='none'; });
-    // limpa checks anteriores
-    checks={camera:null,audio:null,tv:null,cabos:null};
-  } else {
-    // desmarca ocupada e restaura os itens
-    itemOcupada.classList.remove('ocupada');
-    $('tb-ocupada-ok').style.display='';
-    $('tb-ocupada-no').style.display='none';
-    CK_KEYS.forEach(k=>{ $(`ck-${k}`).style.display=''; });
-  }
-  updateCkProgress();
-}
+function resetCheckUI(){
   checks={camera:null,audio:null,tv:null,cabos:null};
-  salaOcupada=false;
   CK_KEYS.forEach(k=>{
     const el=$(`ck-${k}`);
     el.classList.remove('ok','fail');
     el.querySelectorAll('.tb').forEach(b=>b.classList.remove('ok-a','fail-a'));
-    el.style.display='';
   });
-  // reset item ocupada
-  $('ck-ocupada').classList.remove('ok-a','ocupada');
-  $('tb-ocupada-ok').style.display='';
-  $('tb-ocupada-no').style.display='none';
   $('obsText').value='';
   updateCkProgress();
 }
 
 function updateCkProgress(){
-  if(salaOcupada){
-    $('ckBar').style.width='100%';
-    $('ckLbl').textContent='Sala ocupada';
-    $('btnConcluirSala').disabled=false;
-    const sr=$('sronda'),st=$('srTxt');
-    sr.classList.remove('pend','ok','fail');
-    sr.classList.add('pend');
-    st.textContent='🔒 Sala ocupada — confirme para continuar';
-    return;
-  }
   const done=CK_KEYS.filter(k=>checks[k]!==null).length;
   const pct=Math.round(done/CK_KEYS.length*100);
   $('ckBar').style.width=pct+'%';
@@ -818,22 +748,9 @@ function updateCkProgress(){
 
 function concluirSala(){
   const obs=$('obsText').value.trim();
-  if(salaOcupada){
-    salasDaRonda[salaAtual]={checks:{},obs:obs||'Sala ocupada no momento da ronda',status:'ocupada',ts:new Date().toISOString()};
-    _fecharSala();
-    toast(`Sala marcada como 🔒 Ocupada`);
-  } else {
-    const anyFail=CK_KEYS.some(k=>checks[k]==='fail');
-    salasDaRonda[salaAtual]={checks:{...checks},obs,status:anyFail?'fail':'ok',ts:new Date().toISOString()};
-    _fecharSala();
-    toast(`Sala registrada! ✓`);
-  }
-  _verificarConclusao();
-}
-
-function _fecharSala(){
+  const anyFail=CK_KEYS.some(k=>checks[k]==='fail');
+  salasDaRonda[salaAtual]={checks:{...checks},obs,status:anyFail?'fail':'ok',ts:new Date().toISOString()};
   salaAtual='';
-  salaOcupada=false;
   $('salaDetected').classList.remove('on');
   $('sectionChecklist').classList.add('hidden');
   $('selSala').value='';
@@ -841,13 +758,10 @@ function _fecharSala(){
   updateGlobalProgress();
   renderSalasList();
   populateSelSala();
-}
-
-function _verificarConclusao(){
-  // Ronda pode ser enviada quando não houver salas sem registro (pendentes puras)
-  // Salas ocupadas NÃO bloqueiam — ficam marcadas mas não impedem envio
-  const semRegistro=(SALAS[localAtual]||[]).filter(s=>!salasDaRonda[s]);
-  if(semRegistro.length===0) mostrarRelatorio();
+  toast(`Sala registrada! ✓`);
+  // verificar se concluiu tudo
+  const falt=(SALAS[localAtual]||[]).filter(s=>!salasDaRonda[s]);
+  if(falt.length===0) mostrarRelatorio();
 }
 
 function cancelarSala(){
@@ -866,44 +780,31 @@ function cancelarSala(){
 function updateGlobalProgress(){
   const salas=SALAS[localAtual]||[];
   const total=salas.length;
-  const registradas=Object.keys(salasDaRonda).length;
-  const ocupadas=Object.values(salasDaRonda).filter(r=>r.status==='ocupada').length;
-  const conferidas=registradas-ocupadas;
-  const pend=total-registradas;
-  const pct=Math.round(registradas/total*100);
+  const done=Object.keys(salasDaRonda).length;
+  const pend=total-done;
+  const pct=Math.round(done/total*100);
   $('globalBar').style.width=pct+'%';
-  $('globalLbl').textContent=`${registradas} / ${total} salas`;
+  $('globalLbl').textContent=`${done} / ${total} salas`;
   $('gTotal').textContent=total;
-  $('gDone').textContent=conferidas;
+  $('gDone').textContent=done;
   $('gPend').textContent=pend;
-  // atualiza legenda do counter
-  const lblDone=document.querySelector('.gs-l');
-  if(ocupadas>0 && lblDone){
-    $('gDone').title=`${conferidas} conferidas + ${ocupadas} ocupadas`;
-  }
 }
 
 function renderSalasList(){
   const salas=SALAS[localAtual]||[];
   const list=$('salasList');
   list.innerHTML='';
-  // ordem: pendentes → ocupadas → conferidas
-  const pendentes  = salas.filter(s=>!salasDaRonda[s]);
-  const ocupadas   = salas.filter(s=>salasDaRonda[s]?.status==='ocupada');
-  const conferidas = salas.filter(s=>salasDaRonda[s] && salasDaRonda[s].status!=='ocupada');
-
-  [...pendentes,...ocupadas,...conferidas].forEach(s=>{
-    const reg=salasDaRonda[s];
-    const status=reg?.status;
-    let cls='sala-pill';
-    let ico='○';
-    if(status==='ok')      { cls+=' done'; ico='✅'; }
-    if(status==='fail')    { cls+=' done'; ico='⚠️'; }
-    if(status==='ocupada') { cls+=' ocupada'; ico='🔒'; }
+  // Salas pendentes primeiro, depois concluídas
+  const pendentes=salas.filter(s=>!salasDaRonda[s]);
+  const concluidas=salas.filter(s=>!!salasDaRonda[s]);
+  [...pendentes,...concluidas].forEach(s=>{
+    const feito=!!salasDaRonda[s];
+    const hasFail=feito&&salasDaRonda[s].status==='fail';
     const div=document.createElement('div');
-    div.className=cls;
-    div.innerHTML=`<span class="sp-name">${localAtual} - ${s}</span><span class="sp-ico">${ico}</span>`;
-    if(!reg) div.onclick=()=>definirSala(s);
+    div.className='sala-pill'+(feito?' done':'');
+    div.innerHTML=`<span class="sp-name">${localAtual} - ${s}</span>
+      <span class="sp-ico">${feito?(hasFail?'⚠️':'✅'):'○'}</span>`;
+    if(!feito) div.onclick=()=>definirSala(s);
     list.appendChild(div);
   });
 }
@@ -911,25 +812,13 @@ function renderSalasList(){
 function populateSelSala(){
   const salas=SALAS[localAtual]||[];
   const pendentes=salas.filter(s=>!salasDaRonda[s]);
-  // dropdown oculto (referência JS)
   const sel=$('selSala');
-  sel.innerHTML='<option value="">—</option>';
+  sel.innerHTML='<option value="">— Selecione a sala —</option>';
   pendentes.forEach(s=>{
     const opt=document.createElement('option');
-    opt.value=s; opt.textContent=`${localAtual} - ${s}`;
+    opt.value=s;opt.textContent=`${localAtual} - ${s}`;
     sel.appendChild(opt);
   });
-  // dropdown visível no card Salas
-  const selVis=$('selSalaVis');
-  if(selVis){
-    selVis.innerHTML='<option value="">— Selecione a sala —</option>';
-    pendentes.forEach(s=>{
-      const opt=document.createElement('option');
-      opt.value=s; opt.textContent=`${localAtual} - ${s}`;
-      selVis.appendChild(opt);
-    });
-    selVis.style.display=pendentes.length>0?'':'none';
-  }
 }
 
 // ═══════════════════════════════════════
@@ -940,11 +829,7 @@ function mostrarRelatorio(){
   $('cardPendentes').classList.add('hidden');
   $('secRelatorio').classList.remove('hidden');
   atualizarRelPreview();
-  const ocupadas=Object.values(salasDaRonda).filter(r=>r.status==='ocupada').length;
-  const msg=ocupadas>0
-    ? `Ronda finalizada! ${ocupadas} sala(s) ocupada(s) registrada(s) 🔒`
-    : 'Todas as salas conferidas! 🎉';
-  toast(msg, 4000);
+  toast('Todas as salas conferidas! 🎉',3500);
 }
 
 function setItemTI(val){
@@ -963,15 +848,11 @@ function buildRelatorio(){
   const obsIt=$('obsItem').value.trim();
   const linhas=salas.map(s=>{
     const r=salasDaRonda[s];
-    let ico='❌';
-    if(r?.status==='ok')      ico='✅';
-    if(r?.status==='fail')    ico='⚠️';
-    if(r?.status==='ocupada') ico='🔒';
+    const ico=r?(r.status==='ok'?'✅':'⚠️'):'❌';
     return`${ico} ${localAtual} - ${s}`;
   }).join('\n');
   const simNao=itemTI?'( X ) Sim  (  ) Não':'(  ) Sim  ( X ) Não';
-  // [ANALISTA COMENTADO] linha 👤 removida do relatório
-  let txt=`📍 ${LOCAL_NAME[localAtual]}\n📊 Ronda Diária\n🗓️ ${formatDate(now)}\n⏰ ${formatTime(now)}\n${'─'.repeat(28)}\n${linhas}\n${'─'.repeat(28)}\nEncontrou algum item de TI?\n${simNao}`;
+  let txt=`📍 ${LOCAL_NAME[localAtual]}\n📊 Ronda Diária\n🗓️ ${formatDate(now)}\n⏰ ${formatTime(now)}\n👤 ${analista}\n${'─'.repeat(28)}\n${linhas}\n${'─'.repeat(28)}\nEncontrou algum item de TI?\n${simNao}`;
   if(itemTI&&obsIt) txt+=`\nObservação: ${obsIt}`;
   return txt;
 }
@@ -983,11 +864,11 @@ function atualizarRelPreview(){
 $('obsItem') && $('obsItem').addEventListener('input',atualizarRelPreview);
 
 function enviarRelatorio(){
-  // bloqueia apenas salas sem nenhum registro (nem ocupada)
+  // checar faltando
   const falt=(SALAS[localAtual]||[]).filter(s=>!salasDaRonda[s]);
   if(falt.length>0){
     const a=$('alertFalt');
-    a.innerHTML=`⚠ Salas ainda sem registro:<br><strong>${falt.map(s=>`${localAtual} - ${s}`).join('<br>')}</strong>`;
+    a.innerHTML=`⚠ Salas não conferidas:<br><strong>${falt.map(s=>`${localAtual} - ${s}`).join('<br>')}</strong>`;
     a.classList.add('on');
     toast(`Faltam ${falt.length} salas!`);
     return;
@@ -1011,7 +892,7 @@ function resetRonda(){
   $('step2').classList.add('hidden');
   $('step1').classList.remove('hidden');
   $('selLocal').value='';
-  // [ANALISTA COMENTADO] $('inputAnalista').value='';
+  $('inputAnalista').value='';
   analista='';
   $('btnIniciar').disabled=true;
   $('secRelatorio').classList.add('hidden');
@@ -1042,18 +923,13 @@ function renderHistorico(){
     const vals=Object.values(r.salas);
     const ok=vals.filter(s=>s.status==='ok').length;
     const fail=vals.filter(s=>s.status==='fail').length;
-    const ocup=vals.filter(s=>s.status==='ocupada').length;
     return`<div class="hi ${fail?'fail':'ok'}" onclick="openHist(${i})">
       <div class="hi-top">
-        <div><div class="hi-local">📍 ${LOCAL_NAME[r.local]}</div><div class="hi-analista">👤 ${r.analista||'—'}</div></div>
+        <div><div class="hi-local">📍 ${LOCAL_NAME[r.local]}</div><div class="hi-analista">👤 ${r.analista}</div></div>
         <span class="hi-badge ${fail?'fail':'ok'}">${fail?'FALHA':'OK'}</span>
       </div>
       <div class="hi-meta"><span>🗓️ ${formatDT(d)}</span><span>🏢 ${(SALAS[r.local]||[]).length} salas</span></div>
-      <div class="pills">
-        <span class="pill ok">✅ ${ok} OK</span>
-        ${fail?`<span class="pill fail">⚠️ ${fail} Falhas</span>`:''}
-        ${ocup?`<span class="pill" style="background:rgba(120,80,255,.12);color:#a06aff">🔒 ${ocup} Ocupada${ocup>1?'s':''}</span>`:''}
-      </div>
+      <div class="pills"><span class="pill ok">✅ ${ok} OK</span>${fail?`<span class="pill fail">⚠️ ${fail} Falhas</span>`:''}</div>
     </div>`;
   }).join('');
 }
@@ -1065,7 +941,7 @@ function openHist(idx){
   const salas=SALAS[r.local]||[];
   const rows=salas.map(s=>{
     const d2=r.salas[s];
-    const ico=d2?(d2.status==='ok'?'✅':d2.status==='ocupada'?'🔒':'⚠️'):'❌';
+    const ico=d2?(d2.status==='ok'?'✅':'⚠️'):'❌';
     const obs=d2?.obs?` <em style="color:var(--muted);font-size:10px">· ${d2.obs}</em>`:'';
     return`<div class="mrow" style="flex-direction:column;align-items:flex-start;gap:2px;padding:7px 0">
       <div style="font-size:12px;color:var(--text)">${ico} ${r.local} - ${s}${obs}</div></div>`;
