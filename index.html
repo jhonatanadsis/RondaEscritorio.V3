@@ -146,14 +146,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 .btn-row{display:flex;gap:8px}
 .btn-row .btn{flex:1;margin-bottom:0}
 
-/* RADIO */
-.radio-row{display:flex;gap:8px;margin-top:8px}
-.rbtn{flex:1;padding:10px;text-align:center;border-radius:4px;border:1px solid var(--bor);
-  background:var(--sur2);font-size:11px;letter-spacing:2px;text-transform:uppercase;
-  cursor:pointer;color:var(--muted);transition:all .2s;font-family:'DM Mono',monospace}
-.rbtn.yes.active{border-color:#22c55e;background:rgba(34,197,94,.12);color:#4ade80;box-shadow:0 0 14px rgba(34,197,94,.2)}
-.rbtn.no.active{border-color:var(--muted);background:rgba(90,112,144,.1);color:var(--text)}
-
 /* RELATORIO PREVIEW */
 .rel-box{background:#0f0f17;border:1px solid rgba(124,58,237,.3);border-radius:4px;
   padding:13px 15px;font-size:12px;line-height:1.9;white-space:pre-wrap;
@@ -162,44 +154,34 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
   background:linear-gradient(90deg,var(--blue),var(--cyan))}
 
 /* HIST */
-.hist-empty{text-align:center;padding:40px 20px;color:var(--muted)}
-.hi{background:var(--sur);border:1px solid var(--bor);border-radius:6px;padding:12px 14px;margin-bottom:9px;position:relative;overflow:hidden;cursor:pointer;transition:border-color .2s}
-.hi:hover{border-color:rgba(0,102,255,.4)}
+.hi{background:var(--sur);border:1px solid var(--bor);border-radius:6px;padding:12px 14px;margin-bottom:9px;position:relative;overflow:hidden;cursor:pointer}
 .hi.ok::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green)}
 .hi.fail::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red)}
 .hi-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px}
 .hi-badge{font-size:8px;letter-spacing:2px;padding:3px 8px;border-radius:2px;text-transform:uppercase}
 .hi-badge.ok{background:rgba(0,230,118,.12);color:var(--green)}
 .hi-badge.fail{background:rgba(255,61,90,.12);color:var(--red)}
-.hi-meta{font-size:10px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
 
 /* MODAL */
-.mo{position:fixed;inset:0;background:rgba(0,5,15,.9);display:none;
-  align-items:center;justify-content:center;z-index:100;padding:20px;backdrop-filter:blur(4px)}
+.mo{position:fixed;inset:0;background:rgba(0,5,15,.9);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;backdrop-filter:blur(4px)}
 .mo.open{display:flex}
-.modal{background:var(--sur);border:1px solid var(--bor);border-radius:8px;
-  width:100%;max-width:400px;max-height:88vh;overflow-y:auto}
-.modal-hdr{padding:14px 16px;border-bottom:1px solid var(--bor);position:sticky;top:0;
-  background:var(--sur);z-index:1;display:flex;align-items:center;justify-content:space-between}
+.modal{background:var(--sur);border:1px solid var(--bor);border-radius:8px;width:100%;max-width:400px;max-height:88vh;overflow-y:auto}
+.modal-hdr{padding:14px 16px;border-bottom:1px solid var(--bor);position:sticky;top:0;background:var(--sur);z-index:1;display:flex;align-items:center;justify-content:space-between}
 .modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;letter-spacing:2px;color:#fff}
-.modal-close{width:28px;height:28px;border-radius:50%;background:var(--sur2);
-  border:1px solid var(--bor);color:var(--muted);cursor:pointer;font-size:14px;
-  display:flex;align-items:center;justify-content:center}
+.modal-close{width:28px;height:28px;border-radius:50%;background:var(--sur2);border:1px solid var(--bor);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center}
 .modal-body{padding:16px}
-.mrow{display:flex;justify-content:space-between;align-items:flex-start;
-  padding:9px 0;border-bottom:1px solid rgba(26,48,80,.5);font-size:12px}
-.mrow-lbl{color:var(--muted);font-size:9px;letter-spacing:2px;text-transform:uppercase;flex-shrink:0;margin-right:12px}
-.mrow-val{color:var(--text);text-align:right}
 
-/* HIST LISTA SALAS */
-.hist-salas-list{margin-top:15px;display:flex;flex-direction:column;gap:6px}
-.hsl-item{background:var(--sur2);padding:10px 12px;border-radius:4px;border:1px solid var(--bor);display:flex;justify-content:space-between;font-size:11px}
+/* HIST DETALHES */
+.hst-card{background:var(--sur2);border:1px solid var(--bor);border-radius:6px;margin-bottom:10px;overflow:hidden}
+.hst-card-hdr{padding:8px 12px;background:rgba(255,255,255,0.03);display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bor)}
+.hst-sala-n{font-size:11px;font-weight:800;color:var(--text)}
+.hst-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 12px}
+.hst-item{font-size:10px;display:flex;align-items:center;gap:6px;color:var(--muted)}
+.hst-item.ok{color:var(--green)}
+.hst-item.fail{color:var(--red)}
+.hst-obs{padding:8px 12px;font-size:10px;color:var(--muted);border-top:1px solid rgba(26,48,80,0.4);font-style:italic}
 
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
-  background:var(--sur2);border:1px solid var(--blue);color:var(--bluel);
-  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
-  padding:10px 20px;border-radius:30px;transition:transform .3s;
-  z-index:200;pointer-events:none;white-space:nowrap}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--sur2);border:1px solid var(--blue);color:var(--bluel);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;padding:10px 20px;border-radius:30px;transition:transform .3s;z-index:200;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .hidden{display:none!important}
 </style>
@@ -213,7 +195,7 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
       <div class="hdr-brand">Ronda de Salas</div>
       <div class="hdr-sub" id="hdrSub">Serasa Experian</div>
     </div>
-    <div class="hdr-chip">v3.1</div>
+    <div class="hdr-chip">v3.2</div>
   </div>
 </div>
 
@@ -270,7 +252,7 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
         <div class="sr-dot"></div><span id="srTxt">Verificação pendente</span>
       </div>
 
-      <button class="btn ghost" onclick="marcarComoOcupada()" style="border-color: var(--amber); color: var(--amber); margin-bottom: 15px;">
+      <button class="btn ghost" id="btnOcupada" onclick="toggleOcupada()" style="border-color: var(--amber); color: var(--amber); margin-bottom: 15px;">
         👥 Sala Ocupada / Em Reunião
       </button>
 
@@ -295,15 +277,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
     </div>
 
     <div class="hidden" id="secRelatorio">
-      <div class="card" style="background:rgba(0,230,118,.05)">
-        <div class="card-title" style="color:var(--green)">🎉 Ronda Completa!</div>
-        <div class="lbl">Itens de TI encontrados?</div>
-        <div class="radio-row">
-          <div class="rbtn yes" id="rdSim" onclick="setItemTI(true)">( ) Sim</div>
-          <div class="rbtn no active" id="rdNao" onclick="setItemTI(false)">(✓) Não</div>
-        </div>
-        <textarea class="obs hidden" id="obsItem" placeholder="Descreva os itens..." style="margin-top:10px"></textarea>
-      </div>
       <div class="rel-box" id="relPreview"></div>
       <button class="btn wa" onclick="enviarRelatorio()">⬈ Enviar WhatsApp</button>
       <button class="btn ghost" onclick="resetRonda()">↩ Nova Ronda</button>
@@ -312,10 +285,6 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 </div>
 
 <div class="page" id="page-historico">
-  <div class="card" style="display:flex;justify-content:space-between;align-items:center">
-    <div class="lbl" style="margin:0">Rondas Realizadas</div>
-    <div style="font-size:20px;font-weight:800" id="totalRondas">0</div>
-  </div>
   <div id="histList"></div>
 </div>
 
@@ -325,8 +294,8 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 <div class="mo" id="moHist" onclick="closeMo('moHist',event)">
   <div class="modal">
     <div class="modal-hdr">
-      <div class="modal-title" id="mhTitle">Detalhes</div>
-      <button class="modal-close" onclick="document.getElementById('moHist').classList.remove('open')">✕</button>
+      <div class="modal-title" id="mhTitle">Detalhes da Ronda</div>
+      <button class="modal-close" onclick="$('moHist').classList.remove('open')">✕</button>
     </div>
     <div class="modal-body" id="mhBody"></div>
     <div style="padding:16px" id="mhFooter"></div>
@@ -348,7 +317,6 @@ const CK_KEYS=['camera','audio','tv','cabos'];
 
 let localAtual='', salaAtual='', itemTI=false, salasDaRonda={}, historico=[];
 let checks={camera:null,audio:null,tv:null,cabos:null};
-let editingId = null;
 
 const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,'0');
@@ -357,7 +325,6 @@ window.addEventListener('load', () => { carregarHistorico(); atualizarContador()
 
 function formatDate(d){ d=new Date(d); return`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}` }
 function formatTime(d){ d=new Date(d); return`${pad(d.getHours())}h${pad(d.getMinutes())}` }
-function formatDT(d){ return`${formatDate(d)} às ${formatTime(d)}` }
 function showToast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
 
 function showPage(id){
@@ -372,65 +339,36 @@ function showPage(id){
 function onLocalChange(){ localAtual=$('selLocal').value; $('btnIniciar').disabled = !localAtual; }
 
 function iniciarRonda(){
-  if(!editingId) {
-    salasDaRonda={}; 
-    salaAtual=''; 
-    resetCheckUI();
-    itemTI = false;
-    $('obsItem').value = '';
-    setItemTI(false);
-  }
-  $('step1').classList.add('hidden'); 
-  $('step2').classList.remove('hidden');
+  salasDaRonda={}; salaAtual=''; resetCheckUI();
+  $('step1').classList.add('hidden'); $('step2').classList.remove('hidden');
+  $('sectionChecklist').classList.add('hidden'); $('secRelatorio').classList.add('hidden');
   $('hdrSub').textContent=`Serasa · ${LOCAL_NAME[localAtual]}`;
-  
-  if(editingId) {
-    mostrarRelatorio(); // Se estiver editando, vai direto pro final pra ver o que quer mudar
-  } else {
-    $('sectionChecklist').classList.add('hidden'); 
-    $('secRelatorio').classList.add('hidden');
-    updateGlobalProgress(); 
-    renderSalasList(); 
-    populateSelSala();
-  }
+  updateGlobalProgress(); renderSalasList(); populateSelSala();
 }
 
 function onSelSala(){ const v=$('selSala').value; if(v) definirSala(v); $('selSala').value=''; }
 
 function definirSala(nome){
-  salaAtual=nome; 
-  $('salaNomeDisplay').textContent=`${localAtual} - ${nome}`;
-  $('salaDetected').classList.add('on'); 
-  $('sectionChecklist').classList.remove('hidden'); 
+  salaAtual=nome; $('salaNomeDisplay').textContent=`${localAtual} - ${nome}`;
+  $('salaDetected').classList.add('on'); $('sectionChecklist').classList.remove('hidden'); resetCheckUI();
+}
+
+function toggleOcupada() {
+  const isCurrentlyBusy = CK_KEYS.every(k => checks[k] === 'busy');
   
-  // Se já tinha dados dessa sala (em edição), carrega
-  if(salasDaRonda[nome]) {
-    checks = {...salasDaRonda[nome].checks};
-    $('obsText').value = salasDaRonda[nome].obs || '';
-    updateCheckUIFromData();
+  if (!isCurrentlyBusy) {
+    // Marcar como ocupada
+    CK_KEYS.forEach(k => checks[k] = 'busy');
+    $('obsText').value = "SALA OCUPADA - Não foi possível conferir os itens.";
+    $('btnOcupada').style.background = "rgba(255,170,0,0.2)";
+    showToast("Status: Sala Ocupada");
   } else {
+    // Desmarcar ocupada (limpa tudo)
     resetCheckUI();
+    $('btnOcupada').style.background = "transparent";
+    showToast("Status limpo para conferência");
   }
   updateCkProgress();
-}
-
-function updateCheckUIFromData() {
-  CK_KEYS.forEach(k => {
-    const val = checks[k];
-    const el=$(`ck-${k}`);
-    el.classList.remove('ok','fail');
-    el.querySelectorAll('.tb').forEach(b=>b.classList.remove('ok-a','fail-a'));
-    if(val && val !== 'busy') {
-      el.classList.add(val);
-      el.querySelector(`.${val}-btn`).classList.add(`${val}-a`);
-    }
-  });
-}
-
-function marcarComoOcupada() {
-  CK_KEYS.forEach(k => checks[k] = 'busy');
-  $('obsText').value = "SALA OCUPADA - Não foi possível conferir os itens.";
-  updateCkProgress(); showToast("Status: Sala Ocupada");
 }
 
 function setCheck(item,val){
@@ -444,7 +382,9 @@ function setCheck(item,val){
 function resetCheckUI(){
   checks={camera:null,audio:null,tv:null,cabos:null};
   CK_KEYS.forEach(k=>{ const el=$(`ck-${k}`); el.classList.remove('ok','fail'); el.querySelectorAll('.tb').forEach(b=>b.classList.remove('ok-a','fail-a')); });
-  $('obsText').value=''; updateCkProgress();
+  $('obsText').value=''; 
+  $('btnOcupada').style.background = "transparent";
+  updateCkProgress();
 }
 
 function updateCkProgress(){
@@ -458,7 +398,7 @@ function updateCkProgress(){
 }
 
 function concluirSala(){
-  salasDaRonda[salaAtual]={checks:{...checks},obs:$('obsText').value.trim(),status:$('sronda').className.split(' ')[1],ts:new Date().toISOString()};
+  salasDaRonda[salaAtual]={checks:{...checks},obs:$('obsText').value.trim(),status:$('sronda').className.split(' ')[1]};
   salaAtual=''; $('salaDetected').classList.remove('on'); $('sectionChecklist').classList.add('hidden');
   updateGlobalProgress(); renderSalasList(); populateSelSala();
   if(Object.keys(salasDaRonda).length===(SALAS[localAtual]||[]).length) mostrarRelatorio();
@@ -476,9 +416,7 @@ function renderSalasList(){
     const f=!!salasDaRonda[x], st=f?salasDaRonda[x].status:'', ico=f?(st==='busy'?'👥':(st==='fail'?'⚠️':'✅')):'○';
     const d=document.createElement('div'); d.className='sala-pill'+(f?' done':'');
     d.innerHTML=`<span class="sp-name">${localAtual} - ${x}</span><span class="sp-ico">${ico}</span>`;
-    // Em modo edição permitimos clicar mesmo nas concluídas para re-editar
-    d.onclick=()=>definirSala(x);
-    list.appendChild(d);
+    if(!f) d.onclick=()=>definirSala(x); list.appendChild(d);
   });
 }
 
@@ -487,148 +425,80 @@ function populateSelSala(){
   s.filter(x=>!salasDaRonda[x]).forEach(x=>{ const o=document.createElement('option'); o.value=x; o.textContent=`${localAtual} - ${x}`; sel.appendChild(o); });
 }
 
-function mostrarRelatorio(){ 
-  $('cardPendentes').classList.add('hidden'); 
-  $('secRelatorio').classList.remove('hidden'); 
-  atualizarRelPreview(); 
-}
+function mostrarRelatorio(){ $('cardPendentes').classList.add('hidden'); $('secRelatorio').classList.remove('hidden'); atualizarRelPreview(); }
 
-function setItemTI(v){
-  itemTI=v; $('rdSim').classList.toggle('active',v); $('rdNao').classList.toggle('active',!v);
-  $('rdSim').textContent=v?'(✓) Sim':'( ) Sim'; $('rdNao').textContent=!v?'(✓) Não':'( ) Não';
-  $('obsItem').classList.toggle('hidden',!v); atualizarRelPreview();
-}
-
-function buildRelatorio(dadosRonda = null){
-  const local = dadosRonda ? dadosRonda.local : localAtual;
-  const salas = dadosRonda ? dadosRonda.salas : salasDaRonda;
-  const ti = dadosRonda ? dadosRonda.itemTI : itemTI;
-  const obs = dadosRonda ? (dadosRonda.obsItem || '') : $('obsItem').value.trim();
-  const d = dadosRonda ? new Date(dadosRonda.data) : new Date();
+function buildRelatorio(dados = null){
+  const local = dados ? dados.local : localAtual;
+  const salas = dados ? dados.salas : salasDaRonda;
+  const d = dados ? new Date(dados.data) : new Date();
 
   const linhas=(SALAS[local]||[]).map(s=>{
     const r=salas[s]; 
-    let ico = '👥'; 
-    let statusTexto = '';
-    
+    let ico = '👥'; let statusTxt = '';
     if(r) {
-      if (r.status === 'busy') {
-         statusTexto = ': Sala ocupada';
-      } else if (r.status === 'ok') {
-         ico = '✅';
-      } else if (r.status === 'fail') {
-         ico = '⚠️';
-      }
-    } else {
-      ico = '❌';
+      if (r.status === 'busy') statusTxt = ': Sala ocupada';
+      else if (r.status === 'ok') ico = '✅';
+      else if (r.status === 'fail') ico = '⚠️';
     }
-    
-    return`${ico} ${local} - ${s}${statusTexto}`;
+    return`${ico} ${local} - ${s}${statusTxt}`;
   }).join('\n');
   
-  let txt=`📍 ${LOCAL_NAME[local]}\n📊 Ronda Diária\n🗓️ ${formatDate(d)}\n⏰ ${formatTime(d)}\n\n──── Salas de reuniões ────\n${linhas}\n\nItens TI encontrados?\n${ti?'( X ) Sim  (  ) Não':'(  ) Sim  ( X ) Não'}`;
-  if(ti && obs) txt+=`\nObs: ${obs}`;
-  return txt;
+  return `📍 ${LOCAL_NAME[local]}\n📊 Ronda Diária\n🗓️ ${formatDate(d)}\n⏰ ${formatTime(d)}\n\n──── Salas de reuniões ────\n${linhas}\n\nItens TI encontrados?\n(  ) Sim  ( X ) Não`;
 }
 
 function atualizarRelPreview(){ $('relPreview').textContent=buildRelatorio(); }
 
 function enviarRelatorio(){
-  const t=buildRelatorio();
-  const reg={
-    id: editingId || Date.now(),
-    local: localAtual,
-    data: editingId ? historico.find(h=>h.id===editingId).data : new Date().toISOString(),
-    salas: {...salasDaRonda},
-    itemTI,
-    obsItem: $('obsItem').value.trim(),
-    relatorio: t
-  };
-
-  if(editingId) {
-    const idx = historico.findIndex(h => h.id === editingId);
-    historico[idx] = reg;
-    showToast("Ronda atualizada!");
-  } else {
-    historico.unshift(reg);
-  }
-
-  salvarHistorico(); 
-  atualizarContador();
+  const t=buildRelatorio(), reg={id:Date.now(),local:localAtual,data:new Date().toISOString(),salas:{...salasDaRonda},relatorio:t};
+  historico.unshift(reg); salvarHistorico(); atualizarContador();
   window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`,'_blank');
-  if(editingId) resetRonda();
-}
-
-function reenviarHist(idx){
-  const r = historico[idx];
-  const t = buildRelatorio(r);
-  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(t)}`,'_blank');
-}
-
-function editarHist(idx){
-  const r = historico[idx];
-  editingId = r.id;
-  localAtual = r.local;
-  salasDaRonda = {...r.salas};
-  itemTI = r.itemTI;
-  $('selLocal').value = r.local;
-  $('obsItem').value = r.obsItem || '';
-  
-  // Fecha modal e vai para página de ronda
-  $('moHist').classList.remove('open');
-  showPage('ronda');
-  iniciarRonda();
-  setItemTI(r.itemTI);
-  showToast("Modo edição ativado");
 }
 
 function resetRonda(){
-  salasDaRonda={}; localAtual=''; itemTI=false; editingId=null;
-  $('step2').classList.add('hidden'); $('step1').classList.remove('hidden');
-  $('selLocal').value=''; $('secRelatorio').classList.add('hidden'); 
-  $('cardPendentes').classList.remove('hidden'); $('hdrSub').textContent='Serasa Experian';
+  salasDaRonda={}; localAtual=''; $('step2').classList.add('hidden'); $('step1').classList.remove('hidden');
+  $('selLocal').value=''; $('secRelatorio').classList.add('hidden'); $('cardPendentes').classList.remove('hidden');
 }
 
-function salvarHistorico(){ try{localStorage.setItem('ronda_v3_1',JSON.stringify(historico))}catch(e){} }
-function carregarHistorico(){ try{const r=localStorage.getItem('ronda_v3_1'); if(r)historico=JSON.parse(r)}catch(e){} }
-function atualizarContador(){ $('histCount').textContent=historico.length; $('totalRondas').textContent=historico.length; }
+function salvarHistorico(){ try{localStorage.setItem('ronda_v3_2',JSON.stringify(historico))}catch(e){} }
+function carregarHistorico(){ try{const r=localStorage.getItem('ronda_v3_2'); if(r)historico=JSON.parse(r)}catch(e){} }
+function atualizarContador(){ $('histCount').textContent=historico.length; }
 
 function renderHistorico(){
-  const list=$('histList'); if(!historico.length){ list.innerHTML='<div class="hist-empty">📋 Nenhuma ronda registrada</div>'; return; }
+  const list=$('histList'); if(!historico.length){ list.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">📋 Vazio</div>'; return; }
   list.innerHTML=historico.map((r,i)=>`
     <div class="hi ${Object.values(r.salas).some(x=>x.status==='fail')?'fail':'ok'}" onclick="openHist(${i})">
       <div class="hi-top"><div>📍 ${LOCAL_NAME[r.local]}</div><span class="hi-badge ${Object.values(r.salas).some(x=>x.status==='fail')?'fail':'ok'}">${Object.values(r.salas).some(x=>x.status==='fail')?'FALHA':'OK'}</span></div>
-      <div class="hi-meta">🗓️ ${formatDT(r.data)}</div>
+      <div style="font-size:10px;color:var(--muted)">🗓️ ${formatDate(r.data)} às ${formatTime(r.data)}</div>
     </div>`).join('');
 }
 
 function openHist(i){
-  const r=historico[i]; 
-  $('mhTitle').textContent=`Ronda ${LOCAL_NAME[r.local]}`;
-  
-  let salasInfo = '';
+  const r=historico[i]; $('mhTitle').textContent=`Ronda ${LOCAL_NAME[r.local]}`;
+  let html = '';
   for(let s in r.salas) {
-    const st = r.salas[s].status;
-    const ico = st==='busy'?'👥':(st==='fail'?'⚠️':'✅');
-    salasInfo += `<div class="hsl-item"><span>${ico} ${s}</span><span style="color:var(--muted)">${st.toUpperCase()}</span></div>`;
+    const sala = r.salas[s];
+    const isBusy = sala.status === 'busy';
+    html += `
+      <div class="hst-card">
+        <div class="hst-card-hdr">
+          <span class="hst-sala-n">${s}</span>
+          <span style="font-size:10px; color:${sala.status==='ok'?'var(--green)':(isBusy?'var(--amber)':'var(--red)')}">${sala.status.toUpperCase()}</span>
+        </div>
+        <div class="hst-grid">
+          <div class="hst-item ${sala.checks.camera==='ok'?'ok':(sala.checks.camera==='fail'?'fail':'')}">📷 Câmera: ${sala.checks.camera || '-'}</div>
+          <div class="hst-item ${sala.checks.audio==='ok'?'ok':(sala.checks.audio==='fail'?'fail':'')}">🔊 Áudio: ${sala.checks.audio || '-'}</div>
+          <div class="hst-item ${sala.checks.tv==='ok'?'ok':(sala.checks.tv==='fail'?'fail':'')}">📺 TV: ${sala.checks.tv || '-'}</div>
+          <div class="hst-item ${sala.checks.cabos==='ok'?'ok':(sala.checks.cabos==='fail'?'fail':'')}">🔌 Cabos: ${sala.checks.cabos || '-'}</div>
+        </div>
+        ${sala.obs ? `<div class="hst-obs">Obs: ${sala.obs}</div>` : ''}
+      </div>`;
   }
-
-  $('mhBody').innerHTML=`
-    <div class="mrow"><div class="mrow-lbl">Data</div><div class="mrow-val">${formatDT(r.data)}</div></div>
-    <div class="mrow"><div class="mrow-lbl">Itens TI</div><div class="mrow-val">${r.itemTI?'Sim':'Não'}</div></div>
-    <div class="lbl" style="margin-top:15px">Status por Sala:</div>
-    <div class="hist-salas-list">${salasInfo}</div>
-  `;
-  
-  $('mhFooter').innerHTML=`
-    <div class="btn-row">
-      <button class="btn ghost" onclick="editarHist(${i})" style="flex:1">✏️ Editar</button>
-      <button class="btn wa" onclick="reenviarHist(${i})" style="flex:2">⬈ Reenviar</button>
-    </div>
-  `;
+  $('mhBody').innerHTML=html;
+  $('mhFooter').innerHTML=`<button class="btn wa" onclick="reenviarHist(${i})">⬈ Reenviar Relatório</button>`;
   $('moHist').classList.add('open');
 }
 
+function reenviarHist(i){ window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(historico[i].relatorio)}`,'_blank'); }
 function closeMo(id,e){ if(e.target==$(id)) $(id).classList.remove('open'); }
 function cancelarSala(){ salaAtual=''; $('salaDetected').classList.remove('on'); $('sectionChecklist').classList.add('hidden'); }
 </script>
