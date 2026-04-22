@@ -428,7 +428,11 @@ html,body{margin:0;padding:0;min-height:100vh;font-family:'DM Mono',monospace;
 
     <!-- SALAS PENDENTES -->
     <div class="card" id="cardPendentes">
-      <div class="card-title">⏳ Salas Pendentes</div>
+      <div class="card-title">⏳ Salas</div>
+      <div class="lbl">Selecione a sala para iniciar a verificação</div>
+      <select class="sel" id="selSalaVis" onchange="onSelSalaVis()" style="margin-bottom:12px">
+        <option value="">— Selecione a sala —</option>
+      </select>
       <div style="font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;line-height:1.6;font-family:'DM Mono',monospace">
         ○ Pendente &nbsp;·&nbsp; ✅ OK &nbsp;·&nbsp; ⚠️ Falha &nbsp;·&nbsp; 🔒 Ocupada
       </div>
@@ -712,6 +716,12 @@ function onSelSala(){
   $('selSala').value='';
 }
 
+function onSelSalaVis(){
+  const v=$('selSalaVis').value;
+  if(v) definirSala(v);
+  $('selSalaVis').value='';
+}
+
 function definirSala(nome){
   if(salasDaRonda[nome]){toast(`"${nome}" já conferida!`);return}
   const salas=SALAS[localAtual]||[];
@@ -860,15 +870,26 @@ function renderSalasList(){
 
 function populateSelSala(){
   const salas=SALAS[localAtual]||[];
-  // só mostra salas sem nenhum registro (nem ocupada)
   const pendentes=salas.filter(s=>!salasDaRonda[s]);
+  // dropdown oculto (referência JS)
   const sel=$('selSala');
-  sel.innerHTML='<option value="">— Selecione a sala —</option>';
+  sel.innerHTML='<option value="">—</option>';
   pendentes.forEach(s=>{
     const opt=document.createElement('option');
-    opt.value=s;opt.textContent=`${localAtual} - ${s}`;
+    opt.value=s; opt.textContent=`${localAtual} - ${s}`;
     sel.appendChild(opt);
   });
+  // dropdown visível no card Salas
+  const selVis=$('selSalaVis');
+  if(selVis){
+    selVis.innerHTML='<option value="">— Selecione a sala —</option>';
+    pendentes.forEach(s=>{
+      const opt=document.createElement('option');
+      opt.value=s; opt.textContent=`${localAtual} - ${s}`;
+      selVis.appendChild(opt);
+    });
+    selVis.style.display=pendentes.length>0?'':'none';
+  }
 }
 
 // ═══════════════════════════════════════
